@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Montserrat&display=swap');
+
+h1 {
+    font-family: 'Montserrat', sans-serif;
+    margin-outside: 20px;
+    text-align: center;
+    font-size: 2.5vw;
+    text-shadow: 1px 1px 3px #000000a9;
+}
+
+.shortdesc{
+    font-family: 'Montserrat', sans-serif;  
+    text-align: center;
+    font-size: 1vw;
+}
+
+h2{
+    font-family: 'Montserrat', sans-serif; 
+    text-align: center;
+    font-size: 2vw;
+    text-shadow: 1px 1px 3px #000000a9;
+}
+
+h3 {
+    font-family: 'Montserrat', sans-serif;
+    margin-outside: 15px;
+    text-align: center;
+    font-size: 1vw;
+    text-transform: uppercase;
+}
+
+/* #region {
+    display: block;
+    margin: 0 auto;
+} */
+
+form {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1vw;
+    margin: auto;
+    width: 50%;
+}
+
+fieldset {
+	/* display: flex; */
+	border-style: dotted;
+    margin-bottom: 2;
+}
+option {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1vw;
+}
+
+.backButton {
+    font-family: 'Montserrat', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10%;
+    margin-left: 40%;
+    margin-right: 40%;
+}
+
+/* #forForm {
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 5px 10px 18px #bababa;
+    margin: 20px auto auto;
+    width: 80%;
+} */
+
+.parentForm {
+    text-align: center;
+}
+
+.childForm {
+    display: inline-block;
+    padding: 10px;
+    margin: 25px 25px 25px 25px;
+    vertical-align: middle;
+}
+
+.forBarGraph {
+    background-color:white;
+    width: 85%;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    margin: 25px auto 25px auto;
+}
+
+img {
+    max-width:100%;
+    max-height:100%;
+}
+
+.parentDiv {
+    text-align: center;
+}
+
+.childDiv {
+    background-color:white;
+    display: inline-block;
+    height: 100%;
+    width: 40%;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    margin: 25px 25px 25px 25px;
+    vertical-align: middle;
+}
+
+.fade-in {
+    margin-bottom: 5%;
+	animation: fadeIn 500ms;
+  	opacity: 1;
+}
+
+@keyframes fadeIn {
+  from {
+  	opacity: 0;
+  }
+  to {
+ 	opacity: 1;
+  }
+}
+
+.box{
+    background-color:white;
+    padding:2%;
+    border-radius: 1%;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+legend{
+    font-weight: bold;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.expenditures:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+body  {
+    background-image: url("testbg.png");  
+    background-repeat: no-repeat;
+    background-size: cover; 
+}
+
+.column {
+    float: left;
+    width: 50%;
+    padding-left: 4%;
+}
+
+.fam>input{
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.fam{
+    padding-left: 4%; 
+    text-align: right;
+}
+
+.row>input{
+    width: 80%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.result{
+    margin-left: 0%;
+    border-radius: 2%;
+    font-weight: bold;
+    width: 50%;
+    border-radius: 999px;
+    padding-top: 0.5%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.3vw;
+    background-color:white;
+    text-align: center;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}
+
+.column1 {
+    float: left;
+    width: 50%;
+
+}
+  
+  /* Clear floats after the columns */
+.resultrow:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+
+.plotbutton, .backButton{
+    background: #5E5DF0;
+    border-radius: 9999px;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    width: 20%;
+    height: 2vw;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 1vw;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    border: 0;   
+
+}
+
+.plotbutton:hover, .backButton:hover{
+    background: #6e6eff;
+    border-radius: 9999px;
+    box-shadow: #6e6eff 0 10px 20px -10px;
+    width: 20%;
+    height: 2vw;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 1vw;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    box-shadow: #6e6eff 0 10px 20px -10px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    border: 0;   
+
+}
+
+.predbutton {
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    margin-left: 73%;
+    width: 8vw;
+    height: 5vw;
+    background: #5E5DF0;
+    border-radius: 9999px;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 1vw;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;    
+}
+
+.predbutton:hover {
+    display: block;
+    margin: 0 auto;
+    cursor: pointer;
+    margin-left: 73%;
+    width: 8vw;
+    height: 5vw;
+    background: #6e6eff;
+    border-radius: 9999px;
+    box-shadow: #6e6eff 0 5px 10px -5px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-family: Inter,Helvetica,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Noto Color Emoji","Segoe UI Symbol","Android Emoji",EmojiSymbols,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue","Noto Sans",sans-serif;
+    font-size: 1vw;
+    font-weight: 700;
+    line-height: 24px;
+    opacity: 1;
+    outline: 0 solid transparent;
+    padding: 8px 18px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: fit-content;
+    word-break: break-word;
+    border: 0;    
+}
+
+hr{
+    border-top: 3px dashed rgb(255, 255, 255);
+ 
+    margin-top: 5%;
+    margin-bottom: 5%;
+    width: 50%;
+}
+
+select {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1vw;
+    height: 2vw;
+    width: 75%;
+    padding-left: 2%;
+    padding-right: 2%;
+    border:0px;
+    outline:0px;
+    margin-right: 2%;
+    box-shadow: #5E5DF0 0 10px 20px -10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+}

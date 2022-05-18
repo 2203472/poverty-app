@@ -1,0 +1,49 @@
+<!doctype html>
+
+<head>
+	<meta charset="utf-8" http-equiv="X-UA-Compatible" content="chrome=1"/>
+    <title>Descriptive Statistics</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}"/>
+</head>
+
+<section>
+    <br>
+    <br>
+    <br>
+    <h1>Descriptive Statistics for {{ region_value }}</h1>
+    <div class="fade-in">
+        <div class="parentDiv">
+            <div class="childDiv">
+                <h2>Not Poor Average Household Income</h2>
+                <h2>{{ not_poor_household_income }}</h2>
+            </div>
+            <div class="childDiv">
+                <h2>Poor Average Household Income</h2>
+                <h2>{{ poor_household_income }}</h2>
+            </div>
+        </div>
+        <div class="forBarGraph">
+            <img src="data:image/png;base64, {{ bar_poor_url }}">
+        </div>
+        <div class="forBarGraph">
+            <img src="data:image/png;base64, {{ bar_not_poor_url }}">
+        </div>
+        <div class="parentDiv">
+            <div class="childDiv">
+                <img src="data:image/png;base64, {{ pi_gender_url }}">
+            </div>
+            <div class="childDiv">
+                <img src="data:image/png;base64, {{ pi_status_url }}">
+            </div>
+        </div>
+        <div class="parentDiv">
+            <div class="childDiv">
+                <img src="data:image/png;base64, {{ pi_household_type_url }}">
+            </div>
+            <div class="childDiv">
+                <img src="data:image/png;base64, {{ pi_top_numerical_features_url }}">
+            </div>
+        </div>
+    </div>
+</section>
+<button class="backButton" onclick="history.back()">Go Back</button>
