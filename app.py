@@ -34,31 +34,31 @@ def main():
 
     if flask.request.method == 'POST':
         if request.form['btn'] == 'predict':
-            household_income = float(flask.request.form['houseincome'])*12.0 
-            bread_cereals_expense = float(flask.request.form['breadcerealexp'])*12.0
-            rice_expense = float(flask.request.form['riceexp'])*12.0
-            meat_expense = float(flask.request.form['meatexp'])*12.0
-            fish_marine_expense = float(flask.request.form['fishmarineexp'])*12.0
-            fruit_expense = float(flask.request.form['fruitexp'])*12.0
-            veg_expense = float(flask.request.form['veggieexp'])*12.0
-            restohotel_expense = float(flask.request.form['restohotelexp'])*12.0
+            household_income = float(flask.request.form['houseincome'])
+            bread_cereals_expense = float(flask.request.form['breadcerealexp'])
+            rice_expense = float(flask.request.form['riceexp'])
+            meat_expense = float(flask.request.form['meatexp'])
+            fish_marine_expense = float(flask.request.form['fishmarineexp'])
+            fruit_expense = float(flask.request.form['fruitexp'])
+            veg_expense = float(flask.request.form['veggieexp'])
+            restohotel_expense = float(flask.request.form['restohotelexp'])
             # alcohol_expense = flask.request.form['alcoholexp']
             # tobacco_expense = flask.request.form['tobaccoexp']
-            wear_expense = float(flask.request.form['wearexp'])*12.0
-            housing_water_expense = float(flask.request.form['housingwaterexp'])*12.0
-            imp_houserental = float(flask.request.form['imphouserental'])*12.0
-            transpo_expense = float(flask.request.form['transpoexp'])*12.0
-            commu_expense = float(flask.request.form['commuexp'])*12.0
-            edu_expense = float(flask.request.form['eduexp'])*12.0
-            misc_expense = float(flask.request.form['miscexp'])*12.0
+            wear_expense = float(flask.request.form['wearexp'])
+            housing_water_expense = float(flask.request.form['housingwaterexp'])
+            imp_houserental = float(flask.request.form['imphouserental'])
+            transpo_expense = float(flask.request.form['transpoexp'])
+            commu_expense = float(flask.request.form['commuexp'])
+            edu_expense = float(flask.request.form['eduexp'])
+            misc_expense = float(flask.request.form['miscexp'])
             # specialoc_expense = flask.request.form['specoccexp']
-            farming_garden_expense = float(flask.request.form['farmgardenexp'])*12.0
-            total_fam_mem = float(flask.request.form['totalfammem'])*12.0
+            farming_garden_expense = float(flask.request.form['farmgardenexp'])
+
             food_expense = float(bread_cereals_expense) + float(rice_expense) + float(meat_expense) + float(fish_marine_expense) + float(fruit_expense) + float(veg_expense)
-            print(household_income)
+            
             df.loc[len(df)] = [household_income, food_expense, bread_cereals_expense, meat_expense, rice_expense, fruit_expense, 
             fish_marine_expense, veg_expense, restohotel_expense, wear_expense, housing_water_expense, imp_houserental, transpo_expense, 
-            commu_expense, edu_expense, misc_expense, farming_garden_expense, total_fam_mem]
+            commu_expense, edu_expense, misc_expense, farming_garden_expense, 5]
 
             # Normalization
             x = df.values
