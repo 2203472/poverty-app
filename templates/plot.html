@@ -14,19 +14,19 @@
     <div class="fade-in">
         <div class="parentDiv">
             <div class="childDiv">
-                <h2>Not Poor Average Household Income</h2>
-                <h2>{{ not_poor_household_income }}</h2>
+                <h2>Not Poor Average Expenditures</h2>
+                <h2>{{ not_poor_household_expenditures }}</h2>
             </div>
             <div class="childDiv">
-                <h2>Poor Average Household Income</h2>
-                <h2>{{ poor_household_income }}</h2>
+                <h2>Poor Average Expenditures</h2>
+                <h2>{{ poor_household_expenditures }}</h2>
             </div>
         </div>
-        <div class="forBarGraph">
+        <div>
+            <h2>Top 10 Occupations of Heads of Poor Households</h2>
+            <div class="forBarGraph">
             <img src="data:image/png;base64, {{ bar_poor_url }}">
         </div>
-        <div class="forBarGraph">
-            <img src="data:image/png;base64, {{ bar_not_poor_url }}">
         </div>
         <div class="parentDiv">
             <div class="childDiv">

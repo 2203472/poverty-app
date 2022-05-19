@@ -94,13 +94,13 @@ def plot(rgn):
 
     # Poor Average Household income
     poor_data = df.loc[df['class'].str.contains("Poor") & df['region'].str.contains(region_value)]
-    rgn_poor_household_income = poor_data['household_income']
-    poor_household_income = "{:.2f}".format(rgn_poor_household_income.mean())
+    rgn_poor_household_expenditures = poor_data['total_expenditure']
+    poor_household_expenditures = "{:.2f}".format(rgn_poor_household_expenditures.mean())
 
     # Not Poor Average Household income
     not_poor_data = df.loc[df['class'].str.contains('Not Poor') & df['region'].str.contains(region_value)]
-    rgn_not_poor_household_income = not_poor_data['household_income']
-    not_poor_household_income = "{:.2f}".format(rgn_not_poor_household_income.mean())
+    rgn_not_poor_household_expenditures = not_poor_data['total_expenditure']
+    not_poor_household_expenditures = "{:.2f}".format(rgn_not_poor_household_expenditures.mean())
 
     #  Poor Occupation count per region
     poor_occupation_count = poor_data['head_occupation'].value_counts()
@@ -109,7 +109,7 @@ def plot(rgn):
     plt.figure(figsize=(15, 5))
     sns.barplot(poor_occupation_count.index, poor_occupation_count.values, alpha=0.5,
                 hue=poor_occupation_count.index, dodge=False)
-    plt.title('Top 10 Occupations of Poor People')
+    #plt.title('Top 10 Occupations of Heads of Poor Households')
     plt.ylabel('Occurrence')
     plt.xticks([])
 
@@ -117,22 +117,6 @@ def plot(rgn):
     plt.close()
     img.seek(0)
     bar_poor_url = base64.b64encode(img.getvalue()).decode('utf8')
-
-    #  Not poor Occupation count per region
-    not_poor_occupation_count = not_poor_data['head_occupation'].value_counts()
-    not_poor_occupation_count = not_poor_occupation_count[:10, ]
-
-    plt.figure(figsize=(15, 5))
-    sns.barplot(not_poor_occupation_count.index, not_poor_occupation_count.values, alpha=0.5,
-                hue=not_poor_occupation_count.index, dodge=False)
-    plt.title('Top 10 Occupations of Not Poor People')
-    plt.ylabel('Occurrence')
-    plt.xticks([])
-
-    plt.savefig(img, format='png')
-    plt.close()
-    img.seek(0)
-    bar_not_poor_url = base64.b64encode(img.getvalue()).decode('utf8')
 
     # Gender count of each region
     region_data = df.loc[df['region'].str.contains(region_value)]
@@ -149,7 +133,7 @@ def plot(rgn):
 
     plt.pie(values, labels=key_list, shadow=True, startangle=180, explode=explode, autopct='%1.1f%%', colors=colors)
 
-    plt.title('GENDER',
+    plt.title('Household Head Gender',
               fontname="Century Gothic",
               size=18)
 
@@ -171,7 +155,7 @@ def plot(rgn):
             explode=explode, autopct='%1.1f%%',
             colors=colors)
 
-    plt.title('FINANCIAL STATUS',
+    plt.title('Household Financial Status',
               fontname="Century Gothic",
               size=18)
 
@@ -476,7 +460,7 @@ def plot(rgn):
             explode=explode, autopct='%1.1f%%',
             colors=colors)
 
-    plt.title('Top 3 Features Based on Pearson R',
+    plt.title('Top 3 Features of Poverty',
               fontname="Century Gothic",
               size=18)
 
@@ -485,10 +469,10 @@ def plot(rgn):
     img.seek(0)
     pi_top_numerical_features = base64.b64encode(img.getvalue()).decode('utf8')
 
-    return render_template('plot.html', bar_poor_url=bar_poor_url, bar_not_poor_url=bar_not_poor_url,
-                           pi_gender_url=pi_gender_url, pi_status_url=pi_status_url, region_value=region_value,
-                           poor_household_income=poor_household_income,
-                           not_poor_household_income=not_poor_household_income,
+    return render_template('plot.html', bar_poor_url=bar_poor_url, pi_gender_url=pi_gender_url,
+                           pi_status_url=pi_status_url, region_value=region_value,
+                           poor_household_expenditures=poor_household_expenditures,
+                           not_poor_household_expenditures=not_poor_household_expenditures,
                            pi_household_type_url=pi_household_type_url,
                            pi_top_numerical_features_url=pi_top_numerical_features)
 
