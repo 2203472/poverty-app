@@ -24,6 +24,7 @@ app = flask.Flask(__name__,
                   static_folder='static',
                   template_folder='templates')
 
+
 @app.route('/', methods=['GET', 'POST'])
 def main():
     with open(f'datasets/raw-features.pkl', 'rb') as f:
@@ -54,11 +55,14 @@ def main():
             # specialoc_expense = flask.request.form['specoccexp']
             farming_garden_expense = float(flask.request.form['farmgardenexp'])
 
-            food_expense = float(bread_cereals_expense) + float(rice_expense) + float(meat_expense) + float(fish_marine_expense) + float(fruit_expense) + float(veg_expense)
-            
-            df.loc[len(df)] = [household_income, food_expense, bread_cereals_expense, meat_expense, rice_expense, fruit_expense, 
-            fish_marine_expense, veg_expense, restohotel_expense, wear_expense, housing_water_expense, imp_houserental, transpo_expense, 
-            commu_expense, edu_expense, misc_expense, farming_garden_expense, 5]
+            food_expense = float(bread_cereals_expense) + float(rice_expense) + float(meat_expense) + float(
+                fish_marine_expense) + float(fruit_expense) + float(veg_expense)
+
+            df.loc[len(df)] = [household_income, food_expense, bread_cereals_expense, meat_expense, rice_expense,
+                               fruit_expense,
+                               fish_marine_expense, veg_expense, restohotel_expense, wear_expense,
+                               housing_water_expense, imp_houserental, transpo_expense,
+                               commu_expense, edu_expense, misc_expense, farming_garden_expense, 5]
 
             # Normalization
             x = df.values
@@ -80,6 +84,7 @@ def main():
             return redirect(url_for("plot", rgn=region))
 
     return render_template("main.html")
+
 
 @app.route('/<rgn>')
 def plot(rgn):
@@ -139,7 +144,7 @@ def plot(rgn):
     values = []
     for key in gender_count.keys():
         values.append(gender_count[key])
-    
+
     colors = ['#df9d9e', '#c8b8d8', '#c1aca8']
 
     plt.pie(values, labels=key_list, shadow=True, startangle=180, explode=explode, autopct='%1.1f%%', colors=colors)
@@ -163,7 +168,7 @@ def plot(rgn):
 
     plt.pie(values_status, labels=status_list,
             shadow=True, startangle=180,
-            explode=explode, autopct='%1.1f%%', 
+            explode=explode, autopct='%1.1f%%',
             colors=colors)
 
     plt.title('FINANCIAL STATUS',
@@ -175,7 +180,7 @@ def plot(rgn):
     img.seek(0)
     pi_status_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-    #Household Type
+    # Household Type
     household_type_count = region_data['householdtype'].value_counts()
     household_type_list = list(household_type_count.keys())
 
@@ -481,11 +486,11 @@ def plot(rgn):
     pi_top_numerical_features = base64.b64encode(img.getvalue()).decode('utf8')
 
     return render_template('plot.html', bar_poor_url=bar_poor_url, bar_not_poor_url=bar_not_poor_url,
-                       pi_gender_url=pi_gender_url, pi_status_url=pi_status_url, region_value=region_value,
-                       poor_household_income=poor_household_income,
-                       not_poor_household_income=not_poor_household_income,
-                       pi_household_type_url=pi_household_type_url,
-                       pi_top_numerical_features_url=pi_top_numerical_features)
+                           pi_gender_url=pi_gender_url, pi_status_url=pi_status_url, region_value=region_value,
+                           poor_household_income=poor_household_income,
+                           not_poor_household_income=not_poor_household_income,
+                           pi_household_type_url=pi_household_type_url,
+                           pi_top_numerical_features_url=pi_top_numerical_features)
 
 
 if __name__ == '__main__':
