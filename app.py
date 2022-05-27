@@ -1,18 +1,18 @@
 import math
 
-import flask
 import pickle
+
+import flask
 import pandas as pd
 from scipy.stats import stats
 from sklearn import preprocessing
 import seaborn as sns
 
-from flask import Flask, render_template, send_file, request, url_for, redirect
+from flask import request, url_for, redirect, render_template
 import matplotlib
 
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from flask import Flask, render_template
 from io import BytesIO
 import base64
 
@@ -27,11 +27,60 @@ app = flask.Flask(__name__,
 
 @app.route('/', methods=['GET', 'POST'])
 def main():
+    # 2015 Household Expenditure
+    img = BytesIO()
+    data = pd.read_csv('datasets/fies-cleaned.csv')
+    sns.set_theme(style="whitegrid")
+
+    plt.figure(figsize=(15, 10))
+    ax = sns.barplot(x="region", y="total_expenditure", palette="pastel", edgecolor=".6", hue="class", data=data)
+    ax.set_xticklabels(ax.get_xticklabels())
+    plt.xticks(rotation=70)
+
+    ax.set_xlabel("Region")
+    ax.set_ylabel("Total Expenditure")
+
+    plt.tight_layout()
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    expenditure_rgn = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Poor Household Expenditure
+    poor_data = data.loc[data['class'] == 'Poor']
+    label = ['bread_cereals_expense', 'rice_expense', 'meat_expense', 'fish_marine_expense',
+             'fruit_expense', 'veg_expense', 'restohotel_expense', 'alcohol_expense',
+             'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
+             'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
+             'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+    poor_data_mydict = {}
+
+    for x in label:
+        poor_data_mydict[x] = poor_data[x].mean()
+
+    poor_data_sorted_tuple = sorted(poor_data_mydict.items(), key=lambda x: x[1], reverse=True)
+    poor_data_sorted_dict = {k: v for k, v in poor_data_sorted_tuple}
+
+    keys = list(poor_data_sorted_dict.keys())
+    values = list(poor_data_sorted_dict.values())
+
+    plt.figure(figsize=(20, 10))
+    ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
+    ax.set_xlabel("Average Expenditures")
+    ax.bar_label(ax.containers[0], padding=3)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pr_expenditure_rgn = base64.b64encode(img.getvalue()).decode('utf8')
+
     with open(f'datasets/raw-features.pkl', 'rb') as f:
         df = pickle.load(f)
 
     if flask.request.method == 'GET':
-        return flask.render_template('main.html')
+        return flask.render_template('main.html', expenditure_rgn=expenditure_rgn,
+                                     pr_expenditure_rgn=pr_expenditure_rgn)
 
     if flask.request.method == 'POST':
         if request.form['btn'] == 'predict':
@@ -43,8 +92,6 @@ def main():
             fruit_expense = float(flask.request.form['fruitexp'])
             veg_expense = float(flask.request.form['veggieexp'])
             restohotel_expense = float(flask.request.form['restohotelexp'])
-            # alcohol_expense = flask.request.form['alcoholexp']
-            # tobacco_expense = flask.request.form['tobaccoexp']
             wear_expense = float(flask.request.form['wearexp'])
             housing_water_expense = float(flask.request.form['housingwaterexp'])
             imp_houserental = float(flask.request.form['imphouserental'])
@@ -52,7 +99,6 @@ def main():
             commu_expense = float(flask.request.form['commuexp'])
             edu_expense = float(flask.request.form['eduexp'])
             misc_expense = float(flask.request.form['miscexp'])
-            # specialoc_expense = flask.request.form['specoccexp']
             farming_garden_expense = float(flask.request.form['farmgardenexp'])
 
             food_expense = float(bread_cereals_expense) + float(rice_expense) + float(meat_expense) + float(
@@ -83,34 +129,62 @@ def main():
             region = request.form["region"]
             return redirect(url_for("plot", rgn=region))
 
-    return render_template("main.html")
-
 
 @app.route('/<rgn>')
 def plot(rgn):
     df = pd.read_csv('datasets/fies-cleaned.csv')
+    colors = ['#df9d9e', '#c8b8d8', '#c1aca8']
     region_value = rgn
     img = BytesIO()
 
     # Poor Average Household income
-    poor_data = df.loc[df['class'].str.contains("Poor") & df['region'].str.contains(region_value)]
+    poor_data = df.loc[(df['class'].isin(["Poor"])) & (df['region'].isin([region_value]))]
     rgn_poor_household_expenditures = poor_data['total_expenditure']
     poor_household_expenditures = "{:.2f}".format(rgn_poor_household_expenditures.mean())
 
     # Not Poor Average Household income
-    not_poor_data = df.loc[df['class'].str.contains('Not Poor') & df['region'].str.contains(region_value)]
+    not_poor_data = df.loc[(df['class'].isin(["Not Poor"])) & (df['region'].isin([region_value]))]
     rgn_not_poor_household_expenditures = not_poor_data['total_expenditure']
     not_poor_household_expenditures = "{:.2f}".format(rgn_not_poor_household_expenditures.mean())
+
+    # Poor Average Expenditure based on region
+    label = ['bread_cereals_expense', 'rice_expense', 'meat_expense', 'fish_marine_expense',
+             'fruit_expense', 'veg_expense', 'restohotel_expense', 'alcohol_expense',
+             'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
+             'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
+             'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+    poor_data_mydict = {}
+
+    for x in label:
+        poor_data_mydict[x] = poor_data[x].mean()
+
+    poor_data_sorted_tuple = sorted(poor_data_mydict.items(), key=lambda x: x[1], reverse=True)
+    poor_data_sorted_dict = {k: v for k, v in poor_data_sorted_tuple}
+
+    keys = list(poor_data_sorted_dict.keys())
+    values = list(poor_data_sorted_dict.values())
+
+    plt.figure(figsize=(20, 10))
+    ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
+    ax.set_xlabel("Average Expenditures")
+    ax.bar_label(ax.containers[0], padding=3)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pr_expenditure_rgn = base64.b64encode(img.getvalue()).decode('utf8')
 
     #  Poor Occupation count per region
     poor_occupation_count = poor_data['head_occupation'].value_counts()
     poor_occupation_count = poor_occupation_count[:10, ]
 
-    plt.figure(figsize=(15, 5))
-    sns.barplot(poor_occupation_count.index, poor_occupation_count.values, alpha=0.5,
-                hue=poor_occupation_count.index, dodge=False)
-    #plt.title('Top 10 Occupations of Heads of Poor Households')
+    plt.figure(figsize=(15, 7))
+    ax1 = sns.barplot(x=poor_occupation_count.index, y=poor_occupation_count.values, palette="pastel",
+                      edgecolor=".6", hue=poor_occupation_count.index, dodge=False)
     plt.ylabel('Occurrence')
+    for container in ax1.containers:
+        ax1.bar_label(container, padding=3)
+
     plt.xticks([])
 
     plt.savefig(img, format='png')
@@ -118,31 +192,57 @@ def plot(rgn):
     img.seek(0)
     bar_poor_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-    # Gender count of each region
-    region_data = df.loc[df['region'].str.contains(region_value)]
+    # Head Highest attainment for poor
+    poor_data_counts = poor_data['head_highestgrade'].value_counts()
+    poor_data_counts = poor_data_counts[:10, ]
 
-    gender_count = region_data['head_sex'].value_counts()
-    explode = (0.1, 0.1)
-    key_list = list(gender_count.keys())
+    plt.figure(figsize=(10, 5))
+    ax2 = sns.barplot(x=poor_data_counts.values, y=poor_data_counts.index, palette="pastel", edgecolor=".6")
+    ax2.bar_label(ax2.containers[0], padding=3)
+    plt.xlabel("Count")
 
-    values = []
-    for key in gender_count.keys():
-        values.append(gender_count[key])
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    bar_head_attainment_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-    colors = ['#df9d9e', '#c8b8d8', '#c1aca8']
+    # Poor type of house
+    poor_data_counts = poor_data['rooftype'].value_counts()
 
-    plt.pie(values, labels=key_list, shadow=True, startangle=180, explode=explode, autopct='%1.1f%%', colors=colors)
+    plt.figure(figsize=(10, 5))
+    ax3 = sns.barplot(x=poor_data_counts.values, y=poor_data_counts.index, palette="pastel", edgecolor=".6")
+    ax3.set(ylabel=None)
+    ax3.set(xlabel="Count")
+    ax3.bar_label(ax3.containers[0], padding=3)
 
-    plt.title('Household Head Gender',
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    bar_typ_house_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Main source of income for poor people
+    status_count = poor_data['mainsrc'].value_counts()
+    status_list = list(status_count.keys())
+
+    values_status = []
+    for key in status_count.keys():
+        values_status.append(status_count[key])
+
+    plt.pie(values_status, labels=status_list,
+            shadow=True, startangle=180,
+            autopct='%1.1f%%', colors=colors)
+
+    plt.title('Main Source of Income',
               fontname="Century Gothic",
               size=18)
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
     img.seek(0)
-    pi_gender_url = base64.b64encode(img.getvalue()).decode('utf8')
+    pi_mainsrc_url = base64.b64encode(img.getvalue()).decode('utf8')
 
     # Financial Status Section
+    region_data = df.loc[df['region'].isin([region_value])]
     status_count = region_data['class'].value_counts()
     status_list = list(status_count.keys())
 
@@ -152,7 +252,7 @@ def plot(rgn):
 
     plt.pie(values_status, labels=status_list,
             shadow=True, startangle=180,
-            explode=explode, autopct='%1.1f%%',
+            autopct='%1.1f%%',
             colors=colors)
 
     plt.title('Household Financial Status',
@@ -164,317 +264,430 @@ def plot(rgn):
     img.seek(0)
     pi_status_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-    # Household Type
-    household_type_count = region_data['householdtype'].value_counts()
-    household_type_list = list(household_type_count.keys())
+    # Correlation on Household Possessions
+    appliancesData = df.loc[df['region'].str.contains(region_value)]
 
-    household_type_values = []
-    for key in household_type_count.keys():
-        household_type_values.append(household_type_count[key])
+    to_drop = ['household_income', 'region', 'food_expense', 'mainsrc', 'agri_indicator',
+               'bread_cereals_expense', 'rice_expense', 'meat_expense', 'fish_marine_expense',
+               'fruit_expense', 'veg_expense', 'restohotel_expense', 'alcohol_expense',
+               'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
+               'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
+               'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep', 'head_sex', 'head_age',
+               'head_marital', 'head_highestgrade', 'head_job_business', 'head_occupation', 'head_class_worker',
+               'householdtype', 'total_fam_mem', 'memage_less5', 'memage_5-17', 'no_employedfam', 'bldghousetype',
+               'rooftype', 'walltype', 'floor_area', 'house_age', 'no_bedrooms', 'tenure', 'toilet_facility',
+               'electricity', 'water_supply']
+    appliancesData.drop(to_drop, inplace=True, axis=1)
 
-    plt.pie(household_type_values, labels=household_type_list,
-            shadow=True, startangle=180,
-            autopct='%1.1f%%', colors=colors)
+    classTypeDummies = pd.get_dummies(appliancesData['class'])
 
-    plt.title('HOUSEHOLD TYPE',
+    appliancesData = pd.concat([appliancesData, classTypeDummies], axis='columns')
+
+    to_drop = ['total_expenditure',
+               'class',
+               'Not Poor']
+    appliancesData.drop(to_drop, inplace=True, axis=1)
+
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(appliancesData.corr(), annot=True,
+                cmap='coolwarm')
+
+    plt.title('Correlation Between Family Possessions & Poor Status\n',
               fontname="Century Gothic",
               size=18)
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
     img.seek(0)
-    pi_household_type_url = base64.b64encode(img.getvalue()).decode('utf8')
+    heatmap_possessions_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-    # Top 3 Valued Numerical Features Based on Pearson Correlation Section
-    regionData = df.loc[df['region'].str.contains(region_value)]
+    # First Half of Income & Family
+    # Related Expense Correlation
+    foodExpenseData = df.loc[df['region'].str.contains(region_value)]
 
     to_drop = ['region',
-               'mainsrc',
+               'alcohol_expense',
+               'tobacco_expense',
+               'wear_expense',
+               'houseing_water_expense',
+               'imp_houserental',
+               'medcare_expense',
+               'transpo_expense',
+               'commu_expense',
+               'edu_expense',
+               'misc_expense',
+               'specialoc_expense',
+               'farming_garden_expense',
+               'totalincome_entrep',
                'head_sex',
+               'head_age',
                'head_marital',
                'head_highestgrade',
                'head_job_business',
                'head_occupation',
                'head_class_worker',
                'householdtype',
+               'total_fam_mem',
+               'memage_less5',
+               'memage_5-17',
+               'no_employedfam',
                'bldghousetype',
                'rooftype',
                'walltype',
+               'floor_area',
+               'house_age',
+               'no_bedrooms',
                'tenure',
                'toilet_facility',
-               'water_supply']
+               'electricity',
+               'water_supply',
+               'no_television',
+               'no_cd_vcd_dvd',
+               'no_component_stereo',
+               'no_ref',
+               'no_washingmachine',
+               'no_airconditioner',
+               'no_car_jeep_van',
+               'no_landline_wireless',
+               'no_cp',
+               'no_pc',
+               'no_stovegas',
+               'no_banca',
+               'no_motorcycle']
+    foodExpenseData.drop(to_drop, inplace=True, axis=1)
 
-    region_data.drop(to_drop, inplace=True, axis=1)
+    mainsrcTypeDummies = pd.get_dummies(foodExpenseData['mainsrc'])
+    classTypeDummies = pd.get_dummies(foodExpenseData['class'])
 
-    classTypeDummies = pd.get_dummies(regionData['class'])
-
-    regionData = pd.concat([regionData, classTypeDummies], axis='columns')
+    foodExpenseData = pd.concat([foodExpenseData, mainsrcTypeDummies], axis='columns')
+    foodExpenseData = pd.concat([foodExpenseData, classTypeDummies], axis='columns')
 
     to_drop = ['class',
-               'Poor']
-    regionData.drop(to_drop, inplace=True, axis=1)
+               'mainsrc',
+               'Not Poor']
+    foodExpenseData.drop(to_drop, inplace=True, axis=1)
 
-    pearsonsRCoefficientTelevision, pValue = stats.pearsonr(
-        regionData['no_television'], regionData['Not Poor'])
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(foodExpenseData.corr(), annot=True,
+                cmap='coolwarm')
 
-    pearsonsRCoefficientMultimedia, pValue = stats.pearsonr(
-        regionData['no_cd_vcd_dvd'], regionData['Not Poor'])
-
-    pearsonsRCoefficientStereo, pValue = stats.pearsonr(
-        regionData['no_component_stereo'], regionData['Not Poor'])
-
-    pearsonsRCoefficientRefrigerator, pValue = stats.pearsonr(
-        regionData['no_ref'], regionData['Not Poor'])
-
-    pearsonsRCoefficientWashingMachine, pValue = stats.pearsonr(
-        regionData['no_washingmachine'], regionData['Not Poor'])
-
-    pearsonsRCoefficientAircon, pValue = stats.pearsonr(
-        regionData['no_airconditioner'], regionData['Not Poor'])
-
-    pearsonsRCoefficientAutomobile, pValue = stats.pearsonr(
-        regionData['no_car_jeep_van'], regionData['Not Poor'])
-
-    pearsonsRCoefficientWirelessLandline, pValue = stats.pearsonr(
-        regionData['no_landline_wireless'], regionData['Not Poor'])
-
-    pearsonsRCoefficientCellphone, pValue = stats.pearsonr(
-        regionData['no_cp'], regionData['Not Poor'])
-
-    pearsonsRCoefficientComputer, pValue = stats.pearsonr(
-        regionData['no_pc'], regionData['Not Poor'])
-
-    pearsonsRCoefficientGasStove, pValue = stats.pearsonr(
-        regionData['no_stovegas'], regionData['Not Poor'])
-
-    pearsonsRCoefficientBangka, pValue = stats.pearsonr(
-        regionData['no_banca'], regionData['Not Poor'])
-
-    if math.isnan(pearsonsRCoefficientBangka) is True:
-        pearsonsRCoefficientBangka = 0
-
-    pearsonsRCoefficientMotorcycle, pValue = stats.pearsonr(
-        regionData['no_motorcycle'], regionData['Not Poor'])
-
-    pearsonsRCoefficientBreadCereal, pValue = stats.pearsonr(
-        regionData['bread_cereals_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientRice, pValue = stats.pearsonr(
-        regionData['rice_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientMeat, pValue = stats.pearsonr(
-        regionData['meat_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientFish, pValue = stats.pearsonr(
-        regionData['fish_marine_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientFruit, pValue = stats.pearsonr(
-        regionData['fruit_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientVegetable, pValue = stats.pearsonr(
-        regionData['veg_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientHouseholdIncome, pValue = stats.pearsonr(
-        regionData['household_income'], regionData['Not Poor'])
-
-    pearsonsRCoefficientFood, pValue = stats.pearsonr(
-        regionData['food_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientAgriculture, pValue = stats.pearsonr(
-        regionData['agri_indicator'], regionData['Not Poor'])
-
-    pearsonsRCoefficientRestohotel, pValue = stats.pearsonr(
-        regionData['restohotel_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientAlcohol, pValue = stats.pearsonr(
-        regionData['alcohol_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientTobacco, pValue = stats.pearsonr(
-        regionData['tobacco_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientWear, pValue = stats.pearsonr(
-        regionData['wear_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientHouseingWater, pValue = stats.pearsonr(
-        regionData['houseing_water_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientHouseRental, pValue = stats.pearsonr(
-        regionData['imp_houserental'], regionData['Not Poor'])
-
-    pearsonsRCoefficientMedcare, pValue = stats.pearsonr(
-        regionData['medcare_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientTranspo, pValue = stats.pearsonr(
-        regionData['transpo_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientCommu, pValue = stats.pearsonr(
-        regionData['commu_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientEducational, pValue = stats.pearsonr(
-        regionData['edu_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientMiscelanous, pValue = stats.pearsonr(
-        regionData['misc_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientSpecialLoc, pValue = stats.pearsonr(
-        regionData['specialoc_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientFarmingGarden, pValue = stats.pearsonr(
-        regionData['farming_garden_expense'], regionData['Not Poor'])
-
-    pearsonsRCoefficientTotalIncomeEntrep, pValue = stats.pearsonr(
-        regionData['totalincome_entrep'], regionData['Not Poor'])
-
-    pearsonsRCoefficientHeadAge, pValue = stats.pearsonr(
-        regionData['head_age'], regionData['Not Poor'])
-
-    pearsonsRCoefficientTotalFamMem, pValue = stats.pearsonr(
-        regionData['total_fam_mem'], regionData['Not Poor'])
-
-    pearsonsRCoefficientMemage_less, pValue = stats.pearsonr(
-        regionData['memage_less5'], regionData['Not Poor'])
-
-    pearsonsRCoefficientMemage_5, pValue = stats.pearsonr(
-        regionData['memage_5-17'], regionData['Not Poor'])
-
-    pearsonsRCoefficientEmployedFam, pValue = stats.pearsonr(
-        regionData['no_employedfam'], regionData['Not Poor'])
-
-    pearsonsRCoefficientFloorArea, pValue = stats.pearsonr(
-        regionData['floor_area'], regionData['Not Poor'])
-
-    pearsonsRCoefficientHouseAge, pValue = stats.pearsonr(
-        regionData['house_age'], regionData['Not Poor'])
-
-    pearsonsRCoefficientBedrooms, pValue = stats.pearsonr(
-        regionData['no_bedrooms'], regionData['Not Poor'])
-
-    pearsonsRCoefficientElectricity, pValue = stats.pearsonr(
-        regionData['electricity'], regionData['Not Poor'])
-
-    televisionScore = {"Number of Television": pearsonsRCoefficientTelevision}
-    multimediaScore = {"Number of CD,VCD, and DVD": pearsonsRCoefficientMultimedia}
-    stereoScore = {"Number of Stereo": pearsonsRCoefficientStereo}
-    refrigeratorScore = {"Number of Refrigerator": pearsonsRCoefficientRefrigerator}
-    washingMachingScore = {"Number of Washing Machine": pearsonsRCoefficientWashingMachine}
-    airconScore = {"Number of Airconditioner": pearsonsRCoefficientAircon}
-    automobileScore = {"Number of Automobile": pearsonsRCoefficientAutomobile}
-    wirelessLandlineScore = {"Number of Wireless Landline": pearsonsRCoefficientWirelessLandline}
-    cellphoneScore = {"Number of Cellphone": pearsonsRCoefficientCellphone}
-    computerScore = {"Number of Computer": pearsonsRCoefficientComputer}
-    gasStoveScore = {"Number of Gas Stove": pearsonsRCoefficientGasStove}
-    bangkaScore = {"Number of Bangka": pearsonsRCoefficientBangka}
-    motorcycleScore = {"Number of Motorcycle": pearsonsRCoefficientMotorcycle}
-    breadCerealScore = {"Bread and Cereals Expense": pearsonsRCoefficientBreadCereal}
-    riceScore = {"Rice Expense": pearsonsRCoefficientRice}
-    meatScore = {"Meat Expense": pearsonsRCoefficientMeat}
-    fishScore = {"Fish Expense": pearsonsRCoefficientFish}
-    fruitScore = {"Fruit Expense": pearsonsRCoefficientFruit}
-    vegetableScore = {"Vegetable Expense": pearsonsRCoefficientVegetable}
-    householdIncomeScore = {"Household Income": pearsonsRCoefficientHouseholdIncome}
-    foodScore = {"Food Expense": pearsonsRCoefficientFood}
-    agricultureScore = {"Agricultularal Indicator": pearsonsRCoefficientAgriculture}
-    restoHotelScore = {"Restaurant-Hotel Expense": pearsonsRCoefficientRestohotel}
-    alcoholScore = {"Alcohol Expense": pearsonsRCoefficientAlcohol}
-    tobaccoScore = {"Tobacco Expense": pearsonsRCoefficientTobacco}
-    wearScore = {"Wear Expense": pearsonsRCoefficientWear}
-    houseingWaterScore = {"Houseing Water Expense": pearsonsRCoefficientHouseingWater}
-    houseRentalScore = {"House Rental Expense": pearsonsRCoefficientHouseRental}
-    medcareScore = {"Medcare Expense": pearsonsRCoefficientMedcare}
-    transpoScore = {"Transportation Expense": pearsonsRCoefficientTranspo}
-    commuScore = {"Communication Expense": pearsonsRCoefficientCommu}
-    educationalScore = {"Educational Expense": pearsonsRCoefficientEducational}
-    miscelanousScore = {"Miscelanous Expense": pearsonsRCoefficientMiscelanous}
-    specialLocScore = {"Special Loc Expense": pearsonsRCoefficientSpecialLoc}
-    farmingGardenScore = {"Farming Garden Expense": pearsonsRCoefficientFarmingGarden}
-    totalIncomeEntrepScore = {"Total Income Entrepreneur Expense": pearsonsRCoefficientTotalIncomeEntrep}
-    headAgeScore = {"Head Age": pearsonsRCoefficientHeadAge}
-    famMemScore = {"Total Family Members": pearsonsRCoefficientTotalFamMem}
-    memage_lessScore = {"memage_less5": pearsonsRCoefficientMemage_less}
-    memage_5Score = {"memage_5-17": pearsonsRCoefficientMemage_5}
-    employedFamScore = {"Number of Employed Family Member": pearsonsRCoefficientEmployedFam}
-    floorAreaScore = {"Floor Area": pearsonsRCoefficientFloorArea}
-    houseAgeScore = {"House Age": pearsonsRCoefficientHouseAge}
-    bedroomsScore = {"Number of Bedrooms": pearsonsRCoefficientBedrooms}
-    electricityScore = {"Electricity": pearsonsRCoefficientElectricity}
-
-    pearsonScore = dict()
-
-    pearsonScore.update(televisionScore)
-    pearsonScore.update(multimediaScore)
-    pearsonScore.update(stereoScore)
-    pearsonScore.update(refrigeratorScore)
-    pearsonScore.update(washingMachingScore)
-    pearsonScore.update(airconScore)
-    pearsonScore.update(automobileScore)
-    pearsonScore.update(wirelessLandlineScore)
-    pearsonScore.update(cellphoneScore)
-    pearsonScore.update(computerScore)
-    pearsonScore.update(gasStoveScore)
-    pearsonScore.update(bangkaScore)
-    pearsonScore.update(motorcycleScore)
-    pearsonScore.update(breadCerealScore)
-    pearsonScore.update(riceScore)
-    pearsonScore.update(meatScore)
-    pearsonScore.update(fishScore)
-    pearsonScore.update(fruitScore)
-    pearsonScore.update(vegetableScore)
-    pearsonScore.update(householdIncomeScore)
-    pearsonScore.update(foodScore)
-    pearsonScore.update(agricultureScore)
-    pearsonScore.update(restoHotelScore)
-    pearsonScore.update(alcoholScore)
-    pearsonScore.update(tobaccoScore)
-    pearsonScore.update(wearScore)
-    pearsonScore.update(houseingWaterScore)
-    pearsonScore.update(houseRentalScore)
-    pearsonScore.update(medcareScore)
-    pearsonScore.update(transpoScore)
-    pearsonScore.update(commuScore)
-    pearsonScore.update(educationalScore)
-    pearsonScore.update(miscelanousScore)
-    pearsonScore.update(specialLocScore)
-    pearsonScore.update(farmingGardenScore)
-    pearsonScore.update(totalIncomeEntrepScore)
-    pearsonScore.update(headAgeScore)
-    pearsonScore.update(famMemScore)
-    pearsonScore.update(memage_lessScore)
-    pearsonScore.update(memage_5Score)
-    pearsonScore.update(employedFamScore)
-    pearsonScore.update(floorAreaScore)
-    pearsonScore.update(houseAgeScore)
-    pearsonScore.update(bedroomsScore)
-    pearsonScore.update(electricityScore)
-
-    highestKeys = sorted(pearsonScore, key=pearsonScore.get, reverse=True)[:3]
-
-    values = []
-    for key in highestKeys:
-        values.append(pearsonScore[key])
-
-    explode = (0.3, 0.1, 0.0)
-
-    plt.axis('equal')
-    plt.pie(values, labels=highestKeys,
-            shadow=True, startangle=90,
-            explode=explode, autopct='%1.1f%%',
-            colors=colors)
-
-    plt.title('Top 3 Features of Poverty',
+    plt.title('Correlation Between (Income & Family Related Expense) & Poor Status\n',
               fontname="Century Gothic",
               size=18)
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
     img.seek(0)
-    pi_top_numerical_features = base64.b64encode(img.getvalue()).decode('utf8')
+    heatmap_incomeFamilyExpense1_url = base64.b64encode(img.getvalue()).decode('utf8')
 
-    return render_template('plot.html', bar_poor_url=bar_poor_url, pi_gender_url=pi_gender_url,
+    # Second Half of Income & Family
+    # Related Expense Correlation
+    foodExpenseData = df.loc[df['region'].str.contains(region_value)]
+
+    to_drop = ['household_income',
+               'region',
+               'total_expenditure',
+               'food_expense',
+               'mainsrc',
+               'agri_indicator',
+               'bread_cereals_expense',
+               'rice_expense',
+               'meat_expense',
+               'fish_marine_expense',
+               'fruit_expense',
+               'veg_expense',
+               'restohotel_expense',
+               'head_sex',
+               'head_age',
+               'head_marital',
+               'head_highestgrade',
+               'head_job_business',
+               'head_occupation',
+               'head_class_worker',
+               'householdtype',
+               'total_fam_mem',
+               'memage_less5',
+               'memage_5-17',
+               'no_employedfam',
+               'bldghousetype',
+               'rooftype',
+               'walltype',
+               'floor_area',
+               'house_age',
+               'no_bedrooms',
+               'tenure',
+               'toilet_facility',
+               'electricity',
+               'water_supply',
+               'no_television',
+               'no_cd_vcd_dvd',
+               'no_component_stereo',
+               'no_ref',
+               'no_washingmachine',
+               'no_airconditioner',
+               'no_car_jeep_van',
+               'no_landline_wireless',
+               'no_cp',
+               'no_pc',
+               'no_stovegas',
+               'no_banca',
+               'no_motorcycle']
+    foodExpenseData.drop(to_drop, inplace=True, axis=1)
+
+    classTypeDummies = pd.get_dummies(foodExpenseData['class'])
+
+    foodExpenseData = pd.concat([foodExpenseData, classTypeDummies], axis='columns')
+
+    to_drop = ['class',
+               'Not Poor']
+    foodExpenseData.drop(to_drop, inplace=True, axis=1)
+
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(foodExpenseData.corr(), annot=True,
+                cmap='coolwarm')
+
+    plt.title('Correlation Between (Income & Family Related Expense) & Poor Status\n',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    heatmap_incomeFamilyExpense2_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # First Half of Income & Family
+    # Related Expense Correlation
+    houseHoldHeadData = df.loc[df['region'].str.contains(region_value)]
+
+    to_drop = ['household_income',
+               'region',
+               'total_expenditure',
+               'food_expense',
+               'mainsrc',
+               'agri_indicator',
+               'bread_cereals_expense',
+               'rice_expense',
+               'meat_expense',
+               'fish_marine_expense',
+               'fruit_expense',
+               'veg_expense',
+               'restohotel_expense',
+               'alcohol_expense',
+               'tobacco_expense',
+               'wear_expense',
+               'houseing_water_expense',
+               'imp_houserental',
+               'medcare_expense',
+               'transpo_expense',
+               'commu_expense',
+               'edu_expense',
+               'misc_expense',
+               'specialoc_expense',
+               'farming_garden_expense',
+               'totalincome_entrep',
+               'bldghousetype',
+               'rooftype',
+               'walltype',
+               'floor_area',
+               'house_age',
+               'no_bedrooms',
+               'tenure',
+               'toilet_facility',
+               'electricity',
+               'water_supply',
+               'no_television',
+               'no_cd_vcd_dvd',
+               'no_component_stereo',
+               'no_ref',
+               'no_washingmachine',
+               'no_airconditioner',
+               'no_car_jeep_van',
+               'no_landline_wireless',
+               'no_cp',
+               'no_pc',
+               'no_stovegas',
+               'no_banca',
+               'no_motorcycle']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    headSexDummies = pd.get_dummies(houseHoldHeadData['head_sex'])
+    headMaritalDummies = pd.get_dummies(houseHoldHeadData['head_marital'])
+    headJobBusinessDummies = pd.get_dummies(houseHoldHeadData['head_job_business'])
+    householdtypeDummies = pd.get_dummies(houseHoldHeadData['householdtype'])
+    classTypeDummies = pd.get_dummies(houseHoldHeadData['class'])
+
+    houseHoldHeadData = pd.concat([houseHoldHeadData, headSexDummies], axis='columns')
+    houseHoldHeadData = pd.concat([houseHoldHeadData, headMaritalDummies], axis='columns')
+    houseHoldHeadData = pd.concat([houseHoldHeadData, headJobBusinessDummies], axis='columns')
+    houseHoldHeadData = pd.concat([houseHoldHeadData, classTypeDummies], axis='columns')
+
+    to_drop = ['head_sex',
+               'head_marital',
+               'head_job_business',
+               'householdtype',
+               'class',
+               'Not Poor']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    houseHoldHeadData['head_highestgrade'] = houseHoldHeadData["head_highestgrade"].astype('category')
+    houseHoldHeadData['head_occupation'] = houseHoldHeadData["head_occupation"].astype('category')
+    houseHoldHeadData['head_class_worker'] = houseHoldHeadData["head_class_worker"].astype('category')
+
+    houseHoldHeadData['head_highestgrade_cat'] = houseHoldHeadData["head_highestgrade"].cat.codes
+    houseHoldHeadData['head_occupation_cat'] = houseHoldHeadData["head_occupation"].cat.codes
+    houseHoldHeadData['head_classworker_cat'] = houseHoldHeadData["head_class_worker"].cat.codes
+
+    to_drop = ['head_highestgrade',
+               'head_occupation',
+               'head_class_worker']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    to_drop = ['No Job/Business',
+               'With Job/Business',
+               'head_highestgrade_cat',
+               'head_occupation_cat',
+               'head_classworker_cat']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(houseHoldHeadData.corr(), annot=True,
+                cmap='coolwarm')
+
+    plt.title('Correlation Between Household Head & Poor Status\n',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    heatmap_householdHead1_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Second Half of Income & Family
+    # Related Expense Correlation
+    houseHoldHeadData = df.loc[df['region'].str.contains(region_value)]
+
+    to_drop = ['household_income',
+               'region',
+               'total_expenditure',
+               'food_expense',
+               'mainsrc',
+               'agri_indicator',
+               'bread_cereals_expense',
+               'rice_expense',
+               'meat_expense',
+               'fish_marine_expense',
+               'fruit_expense',
+               'veg_expense',
+               'restohotel_expense',
+               'alcohol_expense',
+               'tobacco_expense',
+               'wear_expense',
+               'houseing_water_expense',
+               'imp_houserental',
+               'medcare_expense',
+               'transpo_expense',
+               'commu_expense',
+               'edu_expense',
+               'misc_expense',
+               'specialoc_expense',
+               'farming_garden_expense',
+               'totalincome_entrep',
+               'bldghousetype',
+               'rooftype',
+               'walltype',
+               'floor_area',
+               'house_age',
+               'no_bedrooms',
+               'tenure',
+               'toilet_facility',
+               'electricity',
+               'water_supply',
+               'no_television',
+               'no_cd_vcd_dvd',
+               'no_component_stereo',
+               'no_ref',
+               'no_washingmachine',
+               'no_airconditioner',
+               'no_car_jeep_van',
+               'no_landline_wireless',
+               'no_cp',
+               'no_pc',
+               'no_stovegas',
+               'no_banca',
+               'no_motorcycle']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    headSexDummies = pd.get_dummies(houseHoldHeadData['head_sex'])
+    headMaritalDummies = pd.get_dummies(houseHoldHeadData['head_marital'])
+    headJobBusinessDummies = pd.get_dummies(houseHoldHeadData['head_job_business'])
+    pd.get_dummies(houseHoldHeadData['householdtype'])
+    classTypeDummies = pd.get_dummies(houseHoldHeadData['class'])
+
+    houseHoldHeadData = pd.concat([houseHoldHeadData, headSexDummies], axis='columns')
+    houseHoldHeadData = pd.concat([houseHoldHeadData, headMaritalDummies], axis='columns')
+    houseHoldHeadData = pd.concat([houseHoldHeadData, headJobBusinessDummies], axis='columns')
+    houseHoldHeadData = pd.concat([houseHoldHeadData, classTypeDummies], axis='columns')
+
+    to_drop = ['head_sex',
+               'head_marital',
+               'head_job_business',
+               'householdtype',
+               'class',
+               'Not Poor']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    houseHoldHeadData['head_highestgrade'] = houseHoldHeadData["head_highestgrade"].astype('category')
+    houseHoldHeadData['head_occupation'] = houseHoldHeadData["head_occupation"].astype('category')
+    houseHoldHeadData['head_class_worker'] = houseHoldHeadData["head_class_worker"].astype('category')
+
+    houseHoldHeadData['head_highestgrade_cat'] = houseHoldHeadData["head_highestgrade"].cat.codes
+    houseHoldHeadData['head_occupation_cat'] = houseHoldHeadData["head_occupation"].cat.codes
+    houseHoldHeadData['head_classworker_cat'] = houseHoldHeadData["head_class_worker"].cat.codes
+
+    to_drop = ['head_highestgrade',
+               'head_occupation',
+               'head_class_worker']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    to_drop = ['head_age',
+               'total_fam_mem',
+               'memage_less5',
+               'memage_5-17',
+               'no_employedfam',
+               'Female',
+               'Male',
+               'Annulled',
+               'Divorced/Separated',
+               'Married',
+               'Single',
+               'Widowed']
+    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+
+    plt.figure(figsize=(10, 7))
+    sns.heatmap(houseHoldHeadData.corr(), annot=True,
+                cmap='coolwarm')
+
+    plt.title('Correlation Between Household Head & Poor Status\n',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    heatmap_householdHead2_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    return render_template('plot.html', bar_poor_url=bar_poor_url, pi_mainsrc_url=pi_mainsrc_url,
                            pi_status_url=pi_status_url, region_value=region_value,
                            poor_household_expenditures=poor_household_expenditures,
+                           pr_expenditure_rgn=pr_expenditure_rgn,
                            not_poor_household_expenditures=not_poor_household_expenditures,
-                           pi_household_type_url=pi_household_type_url,
-                           pi_top_numerical_features_url=pi_top_numerical_features)
+                           bar_typ_house_url=bar_typ_house_url,
+                           bar_head_attainment_url=bar_head_attainment_url,
+                           heatmap_possessions_url=heatmap_possessions_url,
+                           heatmap_incomeFamilyExpense1_url=heatmap_incomeFamilyExpense1_url,
+                           heatmap_incomeFamilyExpense2_url=heatmap_incomeFamilyExpense2_url,
+                           heatmap_householdHead1_url=heatmap_householdHead1_url,
+                           heatmap_householdHead2_url=heatmap_householdHead2_url)
 
 
 if __name__ == '__main__':
