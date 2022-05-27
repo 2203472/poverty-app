@@ -133,7 +133,8 @@ def main():
 @app.route('/<rgn>')
 def plot(rgn):
     df = pd.read_csv('datasets/fies-cleaned.csv')
-    colors = ['#df9d9e', '#c8b8d8', '#c1aca8']
+    colors = ['#DF9D9E', '#BF899C', '#C79272', '#987896', '#9E8C54', '#716987',
+              '#67864C', '#4C5972', '#117D5B', '#2F4858', '#006F74']
     region_value = rgn
     img = BytesIO()
 
@@ -221,14 +222,14 @@ def plot(rgn):
     bar_typ_house_url = base64.b64encode(img.getvalue()).decode('utf8')
 
     # Main source of income for poor people
-    status_count = poor_data['mainsrc'].value_counts()
-    status_list = list(status_count.keys())
+    src_count = poor_data['mainsrc'].value_counts()
+    src_list = list(src_count.keys())
 
-    values_status = []
-    for key in status_count.keys():
-        values_status.append(status_count[key])
+    src_status = []
+    for key in src_count.keys():
+        src_status.append(src_count[key])
 
-    plt.pie(values_status, labels=status_list,
+    plt.pie(src_status, labels=src_list,
             shadow=True, startangle=180,
             autopct='%1.1f%%', colors=colors)
 
@@ -263,6 +264,81 @@ def plot(rgn):
     plt.close()
     img.seek(0)
     pi_status_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Poor toilet facility
+    region_data = df.loc[df['class'].str.contains('Poor') & df['region'].str.contains('CAR')]
+    toilet_fac_count = region_data['toilet_facility'].value_counts()
+    toilet_fac_count = toilet_fac_count[:7, ]
+    toilet_fac_list = list(toilet_fac_count.keys())
+
+    toilet_fac_status = []
+    for key in toilet_fac_count.keys():
+        toilet_fac_status.append(toilet_fac_count[key])
+
+    plt.figure(figsize=(10, 10))
+
+    plt.pie(toilet_fac_status, labels=toilet_fac_list,
+            shadow=True, startangle=180, colors=colors,
+            autopct='%1.1f%%')
+
+    plt.title('Poor Toilet Facility',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pi_toilet_fac_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Poor Tenure
+    region_data = df.loc[df['class'].str.contains('Poor') & df['region'].str.contains('CAR')]
+    tenure_count = region_data['tenure'].value_counts()
+    tenure_count = tenure_count[:5, ]
+    tenure_list = list(tenure_count.keys())
+
+    tenure_status = []
+    for key in tenure_count.keys():
+        tenure_status.append(tenure_count[key])
+
+    plt.figure(figsize=(10, 10))
+
+    plt.pie(tenure_status, labels=tenure_list,
+            shadow=True, startangle=180, colors=colors,
+            autopct='%1.1f%%')
+
+    plt.title('Poor Tenure',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pi_tenure_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Poor Water supply
+    region_data = df.loc[df['class'].str.contains('Poor') & df['region'].str.contains('CAR')]
+    wtr_sply_count = region_data['water_supply'].value_counts()
+    wtr_sply_count = wtr_sply_count[:10, ]
+    wtr_sply_list = list(wtr_sply_count.keys())
+
+    wtr_sply_status = []
+    for key in wtr_sply_count.keys():
+        wtr_sply_status.append(wtr_sply_count[key])
+
+    plt.figure(figsize=(10, 10))
+
+    plt.pie(wtr_sply_status, labels=wtr_sply_list,
+            shadow=True, startangle=180, colors=colors,
+            autopct='%1.1f%%')
+
+    plt.title('Poor Water supply',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pi_wtr_sply_url = base64.b64encode(img.getvalue()).decode('utf8')
 
     # Household Possessions
     poor_data = df.loc[(df['class'] == 'Poor') & (df['region'] == region_value)]
@@ -338,12 +414,13 @@ def plot(rgn):
     appliancesData.drop(to_drop, inplace=True, axis=1)
 
     d_hp = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
-         "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
-         "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
-         "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
-         "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
-         "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
-         "Number of Motorcycle": 'no_motorcycle', "Poor": 'Poor'}
+            "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
+            "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
+            "Number of Car/Jeep/Van": 'no_car_jeep_van',
+            "Number of Landline/Wireless Connection": 'no_landline_wireless',
+            "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
+            "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
+            "Number of Motorcycle": 'no_motorcycle', "Poor": 'Poor'}
 
     plt.figure(figsize=(10, 6))
     sns.heatmap(appliancesData.corr(), annot=True,
@@ -735,6 +812,8 @@ def plot(rgn):
 
     return render_template('plot.html', bar_poor_url=bar_poor_url, pi_mainsrc_url=pi_mainsrc_url,
                            pi_status_url=pi_status_url, region_value=region_value,
+                           pi_toilet_fac_url=pi_toilet_fac_url, pi_tenure_url=pi_tenure_url,
+                           pi_wtr_sply_url=pi_wtr_sply_url,
                            poor_household_expenditures=poor_household_expenditures,
                            pr_expenditure_rgn=pr_expenditure_rgn,
                            not_poor_household_expenditures=not_poor_household_expenditures,
