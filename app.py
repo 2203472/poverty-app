@@ -17,7 +17,7 @@ from io import BytesIO
 import base64
 
 # Use pickle to load in the pre-trained model.
-with open(f'model/poverty-prediction-rforest3.pkl', 'rb') as f:
+with open(f'model/povery-prediction-lightgbm.pkl', 'rb') as f:
     model = pickle.load(f)
 
 app = flask.Flask(__name__,
@@ -105,10 +105,9 @@ def main():
                 fish_marine_expense) + float(fruit_expense) + float(veg_expense)
 
             df.loc[len(df)] = [household_income, food_expense, bread_cereals_expense, meat_expense, rice_expense,
-                               fruit_expense,
-                               fish_marine_expense, veg_expense, restohotel_expense, wear_expense,
-                               housing_water_expense, imp_houserental, transpo_expense,
-                               commu_expense, edu_expense, misc_expense, farming_garden_expense, 5]
+                              fruit_expense, fish_marine_expense, veg_expense, restohotel_expense, wear_expense,
+                              housing_water_expense, imp_houserental, transpo_expense, commu_expense, edu_expense, 
+                              misc_expense, farming_garden_expense, 5]
 
             # Normalization
             x = df.values
@@ -116,12 +115,12 @@ def main():
             df = pd.DataFrame(min_max_scaler.fit_transform(x), index=df.index, columns=df.columns)
             input_variables = df.tail(1)
 
-            prediction = model.predict(input_variables)[0]
+            prediction = model.predict(input_variables, predict_disable_shape_check=True)[0]
 
-            if prediction == 0:
-                printpredict = "Not Poor"
-            else:
+            if prediction >= 0.5:
                 printpredict = "Poor"
+            else:
+                printpredict = "Not Poor"
 
             return flask.render_template('main.html', result=printpredict)
 
