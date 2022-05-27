@@ -54,7 +54,22 @@ def main():
              'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
              'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
              'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+
+    d = {"Bread & Cereal Expenses": 'bread_cereals_expense', "Rice Expenses": 'rice_expense',
+         "Meat Expenses": 'meat_expense', "Fish Expenses": 'fish_marine_expense',
+         "Fruit Expenses": 'fruit_expense', "Vegetable Expenses": 'veg_expense',
+         "Resto and Hotel Expenses": "restohotel_expense", "Alcohol Expenses": 'alcohol_expense',
+         "Tobacco Expenses": 'tobacco_expense', "Clothin Expenses": 'wear_expense',
+         "House & Water Expenses": 'houseing_water_expense', "Imputed House Rental Value": 'imp_houserental',
+         "Medical Expenses": 'medcare_expense', "Transportation Expenses": 'transpo_expense',
+         "Communication Expenses": 'commu_expense', "Education Expenses": "edu_expense",
+         "Miscellaneous Expenses": "misc_expense", "Occasion Expenses": "specialoc_expense",
+         "Farming & Garden Expenses": "farming_garden_expense",
+         "Income of Entrepreneurial Acitivites": "totalincome_entrep"}
+
     poor_data_mydict = {}
+
+    temp = dict((v, k) for k, v in d.items())
 
     for x in label:
         poor_data_mydict[x] = poor_data[x].mean()
@@ -62,8 +77,10 @@ def main():
     poor_data_sorted_tuple = sorted(poor_data_mydict.items(), key=lambda x: x[1], reverse=True)
     poor_data_sorted_dict = {k: v for k, v in poor_data_sorted_tuple}
 
-    keys = list(poor_data_sorted_dict.keys())
-    values = list(poor_data_sorted_dict.values())
+    clean_dict = {temp[k]: v for k, v in poor_data_sorted_dict.items()}
+
+    keys = list(clean_dict.keys())
+    values = list(clean_dict.values())
 
     plt.figure(figsize=(20, 10))
     ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
@@ -132,7 +149,8 @@ def main():
 @app.route('/<rgn>')
 def plot(rgn):
     df = pd.read_csv('datasets/fies-cleaned.csv')
-    colors = ['#df9d9e', '#c8b8d8', '#c1aca8']
+    colors = ['#DF9D9E', '#BF899C', '#C79272', '#987896', '#9E8C54', '#716987',
+              '#67864C', '#4C5972', '#117D5B', '#2F4858', '#006F74']
     region_value = rgn
     img = BytesIO()
 
@@ -152,7 +170,22 @@ def plot(rgn):
              'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
              'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
              'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+
+    d = {"Bread & Cereal Expenses": 'bread_cereals_expense', "Rice Expenses": 'rice_expense',
+         "Meat Expenses": 'meat_expense', "Fish Expenses": 'fish_marine_expense',
+         "Fruit Expenses": 'fruit_expense', "Vegetable Expenses": 'veg_expense',
+         "Resto and Hotel Expenses": "restohotel_expense", "Alcohol Expenses": 'alcohol_expense',
+         "Tobacco Expenses": 'tobacco_expense', "Clothin Expenses": 'wear_expense',
+         "House & Water Expenses": 'houseing_water_expense', "Imputed House Rental Value": 'imp_houserental',
+         "Medical Expenses": 'medcare_expense', "Transportation Expenses": 'transpo_expense',
+         "Communication Expenses": 'commu_expense', "Education Expenses": "edu_expense",
+         "Miscellaneous Expenses": "misc_expense", "Occasion Expenses": "specialoc_expense",
+         "Farming & Garden Expenses": "farming_garden_expense",
+         "Income of Entrepreneurial Acitivites": "totalincome_entrep"}
+
     poor_data_mydict = {}
+
+    temp = dict((v, k) for k, v in d.items())
 
     for x in label:
         poor_data_mydict[x] = poor_data[x].mean()
@@ -160,8 +193,10 @@ def plot(rgn):
     poor_data_sorted_tuple = sorted(poor_data_mydict.items(), key=lambda x: x[1], reverse=True)
     poor_data_sorted_dict = {k: v for k, v in poor_data_sorted_tuple}
 
-    keys = list(poor_data_sorted_dict.keys())
-    values = list(poor_data_sorted_dict.values())
+    clean_dict = {temp[k]: v for k, v in poor_data_sorted_dict.items()}
+
+    keys = list(clean_dict.keys())
+    values = list(clean_dict.values())
 
     plt.figure(figsize=(20, 10))
     ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
@@ -220,14 +255,14 @@ def plot(rgn):
     bar_typ_house_url = base64.b64encode(img.getvalue()).decode('utf8')
 
     # Main source of income for poor people
-    status_count = poor_data['mainsrc'].value_counts()
-    status_list = list(status_count.keys())
+    src_count = poor_data['mainsrc'].value_counts()
+    src_list = list(src_count.keys())
 
-    values_status = []
-    for key in status_count.keys():
-        values_status.append(status_count[key])
+    src_status = []
+    for key in src_count.keys():
+        src_status.append(src_count[key])
 
-    plt.pie(values_status, labels=status_list,
+    plt.pie(src_status, labels=src_list,
             shadow=True, startangle=180,
             autopct='%1.1f%%', colors=colors)
 
@@ -263,6 +298,130 @@ def plot(rgn):
     img.seek(0)
     pi_status_url = base64.b64encode(img.getvalue()).decode('utf8')
 
+    # Poor toilet facility
+    region_data = df.loc[df['class'].str.contains('Poor') & df['region'].str.contains('CAR')]
+    toilet_fac_count = region_data['toilet_facility'].value_counts()
+    toilet_fac_count = toilet_fac_count[:7, ]
+    toilet_fac_list = list(toilet_fac_count.keys())
+
+    toilet_fac_status = []
+    for key in toilet_fac_count.keys():
+        toilet_fac_status.append(toilet_fac_count[key])
+
+    plt.figure(figsize=(10, 10))
+
+    plt.pie(toilet_fac_status, labels=toilet_fac_list,
+            shadow=True, startangle=180, colors=colors,
+            autopct='%1.1f%%')
+
+    plt.title('Poor Toilet Facility',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pi_toilet_fac_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Poor Tenure
+    region_data = df.loc[df['class'].str.contains('Poor') & df['region'].str.contains('CAR')]
+    tenure_count = region_data['tenure'].value_counts()
+    tenure_count = tenure_count[:5, ]
+    tenure_list = list(tenure_count.keys())
+
+    tenure_status = []
+    for key in tenure_count.keys():
+        tenure_status.append(tenure_count[key])
+
+    plt.figure(figsize=(10, 10))
+
+    plt.pie(tenure_status, labels=tenure_list,
+            shadow=True, startangle=180, colors=colors,
+            autopct='%1.1f%%')
+
+    plt.title('Poor Tenure',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pi_tenure_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Poor Water supply
+    region_data = df.loc[df['class'].str.contains('Poor') & df['region'].str.contains('CAR')]
+    wtr_sply_count = region_data['water_supply'].value_counts()
+    wtr_sply_count = wtr_sply_count[:10, ]
+    wtr_sply_list = list(wtr_sply_count.keys())
+
+    wtr_sply_status = []
+    for key in wtr_sply_count.keys():
+        wtr_sply_status.append(wtr_sply_count[key])
+
+    plt.figure(figsize=(10, 10))
+
+    plt.pie(wtr_sply_status, labels=wtr_sply_list,
+            shadow=True, startangle=180, colors=colors,
+            autopct='%1.1f%%')
+
+    plt.title('Poor Water supply',
+              fontname="Century Gothic",
+              size=18)
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    pi_wtr_sply_url = base64.b64encode(img.getvalue()).decode('utf8')
+
+    # Household Possessions
+    poor_data = df.loc[(df['class'] == 'Poor') & (df['region'] == region_value)]
+    not_poor_data = df.loc[(df['class'] == 'Not Poor') & (df['region'] == region_value)]
+
+    label = ['no_television', 'no_cd_vcd_dvd', 'no_component_stereo', 'no_ref', 'no_washingmachine',
+             'no_airconditioner', 'no_car_jeep_van', 'no_landline_wireless', 'no_cp', 'no_pc', 'no_stovegas',
+             'no_banca', 'no_motorcycle']
+
+    d = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
+         "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
+         "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
+         "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
+         "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
+         "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
+         "Number of Motorcycle": 'no_motorcycle'}
+
+    d = dict((v, k) for k, v in d.items())
+
+    mydict_poor = {}
+
+    for x in label:
+        mydict_poor[x] = poor_data[x].sum()
+
+    sorted_tuple_poor = sorted(mydict_poor.items(), key=lambda x: x[1])
+    sorted_dict_poor = {k: v for k, v in sorted_tuple_poor}
+
+    mydict_not_poor = {}
+
+    for x in label:
+        mydict_not_poor[x] = not_poor_data[x].sum()
+
+    sorted_tuple_not_poor = sorted(mydict_not_poor.items(), key=lambda x: x[1])
+    sorted_dict_not_poor = {k: v for k, v in sorted_tuple_not_poor}
+
+    keys = list(sorted_dict_poor.keys())
+    values_poor = list(sorted_dict_poor.values())
+    values_not_poor = list(sorted_dict_not_poor.values())
+
+    items_plt = pd.DataFrame({'Poor': values_poor, 'Not Poor': values_not_poor}, index=keys)
+    items_plt = items_plt.rename(index=d)
+
+    items_bar_plt = items_plt.plot.barh(figsize=(10, 6), width=1, color=['#F4BFBF', '#8CC0DE'])
+    items_bar_plt.legend(loc='lower right')
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    household_possessions_url = base64.b64encode(img.getvalue()).decode('utf8')
+
     # Correlation on Household Possessions
     appliancesData = df.loc[df['region'].str.contains(region_value)]
 
@@ -287,9 +446,18 @@ def plot(rgn):
                'Not Poor']
     appliancesData.drop(to_drop, inplace=True, axis=1)
 
-    plt.figure(figsize=(10, 7))
+    d_hp = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
+            "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
+            "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
+            "Number of Car/Jeep/Van": 'no_car_jeep_van',
+            "Number of Landline/Wireless Connection": 'no_landline_wireless',
+            "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
+            "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
+            "Number of Motorcycle": 'no_motorcycle', "Poor": 'Poor'}
+
+    plt.figure(figsize=(10, 6))
     sns.heatmap(appliancesData.corr(), annot=True,
-                cmap='coolwarm')
+                cmap='coolwarm', xticklabels=d_hp, yticklabels=d_hp)
 
     plt.title('Correlation Between Family Possessions & Poor Status\n',
               fontname="Century Gothic",
@@ -677,11 +845,14 @@ def plot(rgn):
 
     return render_template('plot.html', bar_poor_url=bar_poor_url, pi_mainsrc_url=pi_mainsrc_url,
                            pi_status_url=pi_status_url, region_value=region_value,
+                           pi_toilet_fac_url=pi_toilet_fac_url, pi_tenure_url=pi_tenure_url,
+                           pi_wtr_sply_url=pi_wtr_sply_url,
                            poor_household_expenditures=poor_household_expenditures,
                            pr_expenditure_rgn=pr_expenditure_rgn,
                            not_poor_household_expenditures=not_poor_household_expenditures,
                            bar_typ_house_url=bar_typ_house_url,
                            bar_head_attainment_url=bar_head_attainment_url,
+                           household_possessions_url=household_possessions_url,
                            heatmap_possessions_url=heatmap_possessions_url,
                            heatmap_incomeFamilyExpense1_url=heatmap_incomeFamilyExpense1_url,
                            heatmap_incomeFamilyExpense2_url=heatmap_incomeFamilyExpense2_url,

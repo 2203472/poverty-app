@@ -10,7 +10,7 @@
 
 <body>
 	<h1>EyeForsee: Poverty</h1>
-	<p class="shortdesc">A predictive and descriptive poverty app for the Philippines</p>
+	<p class="shortDesc">A predictive and descriptive poverty app for the Philippines</p>
 	<form action="{{ url_for('main') }}" method="POST">
 		<div class="box">
 			<fieldset>	
@@ -120,26 +120,20 @@
 				
 			</fieldset>
 		</div>
-
-		
 		<br>
-
-		<div class="resultrow">
+		<div class="resultRow">
 			<div class="column1">
-				<input type="submit" name="btn" value="predict" class="predbutton">
+				<input type="submit" name="btn" value="predict" class="predButton">
 			</div>
 			<div class="column1 result">
 			  <p>Result: {{ result }}</p>
 			</div>
 		</div>
-
 	</form>
-
 	<hr>
-
 	<div class="fade-in">
 		<h2>Poverty Statistics by Region</h2>
-		<p class="shortdesc">Select a region to display its poverty statistics</p>
+		<p class="shortDesc">Select a region to display its poverty statistics</p>
 		<form method = "POST">
             <select id = "region" name = "region">
                 <option value = "I - Ilocos Region">I - Ilocos Region</option>
@@ -160,14 +154,14 @@
                 <option value = "CAR">Cordillera Administrative Region (CAR)</option>
                 <option value = "ARMM">Bangsamoro Autonomous Region In Muslim Mindanao (BARMM)</option>
             </select>
-			<input type = "submit" name="btn" value="Plot" class="plotbutton">
+			<input type = "submit" name="btn" value="Plot" class="plotButton">
 		</form>
         <h2>2015 Average Household Expenditure</h2>
-        <div class="forBarGraph">
+        <div class="centerFrame">
             <img src="data:image/png;base64, {{ expenditure_rgn }}">
         </div>
         <h2>Poor Household Expenditure</h2>
-        <div class="forBarGraph">
+        <div class="centerFrame">
             <img src="data:image/png;base64, {{ pr_expenditure_rgn }}">
         </div>
 	</div>
