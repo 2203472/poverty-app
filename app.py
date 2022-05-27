@@ -264,6 +264,55 @@ def plot(rgn):
     img.seek(0)
     pi_status_url = base64.b64encode(img.getvalue()).decode('utf8')
 
+    # Household Possessions
+    poor_data = df.loc[(df['class'] == 'Poor') & (df['region'] == region_value)]
+    not_poor_data = df.loc[(df['class'] == 'Not Poor') & (df['region'] == region_value)]
+
+    label = ['no_television', 'no_cd_vcd_dvd', 'no_component_stereo', 'no_ref', 'no_washingmachine',
+             'no_airconditioner', 'no_car_jeep_van', 'no_landline_wireless', 'no_cp', 'no_pc', 'no_stovegas',
+             'no_banca', 'no_motorcycle']
+
+    d = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
+         "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
+         "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
+         "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
+         "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
+         "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
+         "Number of Motorcycle": 'no_motorcycle'}
+
+    d = dict((v, k) for k, v in d.items())
+
+    mydict_poor = {}
+
+    for x in label:
+        mydict_poor[x] = poor_data[x].sum()
+
+    sorted_tuple_poor = sorted(mydict_poor.items(), key=lambda x: x[1])
+    sorted_dict_poor = {k: v for k, v in sorted_tuple_poor}
+
+    mydict_not_poor = {}
+
+    for x in label:
+        mydict_not_poor[x] = not_poor_data[x].sum()
+
+    sorted_tuple_not_poor = sorted(mydict_not_poor.items(), key=lambda x: x[1])
+    sorted_dict_not_poor = {k: v for k, v in sorted_tuple_not_poor}
+
+    keys = list(sorted_dict_poor.keys())
+    values_poor = list(sorted_dict_poor.values())
+    values_not_poor = list(sorted_dict_not_poor.values())
+
+    items_plt = pd.DataFrame({'Poor': values_poor, 'Not Poor': values_not_poor}, index=keys)
+    items_plt = items_plt.rename(index=d)
+
+    items_bar_plt = items_plt.plot.barh(figsize=(10, 6), width=1, color=['#F4BFBF', '#8CC0DE'])
+    items_bar_plt.legend(loc='lower right')
+
+    plt.savefig(img, format='png', bbox_inches='tight')
+    plt.close()
+    img.seek(0)
+    household_possessions_url = base64.b64encode(img.getvalue()).decode('utf8')
+
     # Correlation on Household Possessions
     appliancesData = df.loc[df['region'].str.contains(region_value)]
 
@@ -288,9 +337,17 @@ def plot(rgn):
                'Not Poor']
     appliancesData.drop(to_drop, inplace=True, axis=1)
 
-    plt.figure(figsize=(10, 7))
+    d_hp = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
+         "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
+         "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
+         "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
+         "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
+         "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
+         "Number of Motorcycle": 'no_motorcycle', "Poor": 'Poor'}
+
+    plt.figure(figsize=(10, 6))
     sns.heatmap(appliancesData.corr(), annot=True,
-                cmap='coolwarm')
+                cmap='coolwarm', xticklabels=d_hp, yticklabels=d_hp)
 
     plt.title('Correlation Between Family Possessions & Poor Status\n',
               fontname="Century Gothic",
@@ -683,6 +740,7 @@ def plot(rgn):
                            not_poor_household_expenditures=not_poor_household_expenditures,
                            bar_typ_house_url=bar_typ_house_url,
                            bar_head_attainment_url=bar_head_attainment_url,
+                           household_possessions_url=household_possessions_url,
                            heatmap_possessions_url=heatmap_possessions_url,
                            heatmap_incomeFamilyExpense1_url=heatmap_incomeFamilyExpense1_url,
                            heatmap_incomeFamilyExpense2_url=heatmap_incomeFamilyExpense2_url,

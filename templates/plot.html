@@ -12,163 +12,109 @@
     <br>
     <h1>Descriptive Statistics for {{ region_value }}</h1>
     <div class="fade-in">
+        <hr>
         <!-- First div -->
+        <h1>Expenditures</h1>
         <div>
             <div class="parentDiv">
                 <div class="childDiv">
-                    <h2>Not Poor Average Expenditures</h2>
-                    <h2>{{ not_poor_household_expenditures }}</h2>
+                    <h3>Not Poor Average Expenditures</h3>
+                    <h3>{{ not_poor_household_expenditures }}</h3>
                 </div>
                 <div class="childDiv">
-                    <h2>Poor Average Expenditures</h2>
-                    <h2>{{ poor_household_expenditures }}</h2>
+                    <h3>Poor Average Expenditures</h3>
+                    <h3>{{ poor_household_expenditures }}</h3>
                 </div>
-
-                <div>
-                    <div class="childDiv">
-                        <img src="data:image/png;base64, {{ heatmap_incomeFamilyExpense1_url }}">
+            </div>
+            <div class="parentDiv">
+                <div class="childDiv">
+                    <img src="data:image/png;base64, {{ heatmap_incomeFamilyExpense1_url }}">
                         <p>
                             This heatmap shows the income and expenses with the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
                         </p>
-                    </div>
-
-                    <div class="childDiv">
-                        <img src="data:image/png;base64, {{ heatmap_incomeFamilyExpense2_url }}">
+                </div>
+                <div class="childDiv">
+                    <img src="data:image/png;base64, {{ heatmap_incomeFamilyExpense2_url }}">
                         <p>
                             This heatmap is a continuation of the previous heatmap showing the correlation between the income and expense for a family having a poor status.
                         </p>
-                    </div>
-
-                    <div class="forBarGraph">
+                </div>
+                <h2>Average per Expenditure</h2>
+                <div class="centerFrame">
                     <img src="data:image/png;base64, {{ pr_expenditure_rgn }}">
-                    </div>
                 </div>
             </div>
         </div>
-
+        <hr>
         <!-- Second div -->
+        <h1>Household Head and Members</h1>
         <div>
             <div class="parentDiv">
                 <div class="childDiv">
                     <img src="data:image/png;base64, {{ heatmap_householdHead1_url }}">
-                    <p>
-                        This heatmap shows the household head features with the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
-                    </p>
+                        <p>
+                            This heatmap shows the household head features with the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
+                        </p>
                 </div>
                 <div class="childDiv">
                     <img src="data:image/png;base64, {{ heatmap_householdHead2_url }}">
-                    <p>
-                        This heatmap is a continuation of the previous heatmap showing the correlation between the household head features for a family having a poor status.
-                    </p>
+                        <p>
+                            This heatmap is a continuation of the previous heatmap showing the correlation between the household head features for a family having a poor status.
+                        </p>
                 </div>
-
+            </div>
+            <div class="parentDiv">
                 <div class="childDiv">
                     <img src="data:image/png;base64, {{ pi_mainsrc_url }}">
                 </div>
-
                 <div class="childDiv">
                     <img src="data:image/png;base64, {{ pi_status_url }}">
                 </div>
             </div>
-
             <div>
                 <h2>Top 10 Occupations of Heads of Poor Households</h2>
-                <div class="forBarGraph">
+                <div class="centerFrame">
                     <img src="data:image/png;base64, {{ bar_poor_url }}">
                 </div>
                 <h2>Highest educational attainment (Poor)</h2>
-                <div class="forBarGraph">
+                <div class="centerFrame">
                     <img src="data:image/png;base64, {{ bar_head_attainment_url }}">
                 </div>
             </div>
         </div>
-
+        <hr>
         <!-- Third div -->
+        <h1>House Details</h1>
         <div>
-            <h2>Type of House (Poor)</h2>
-            <div class="forBarGraph">
-                <img src="data:image/png;base64, {{ bar_typ_house_url }}">
-            </div>
-        </div>
-
-        <!-- Third div -->
-        <div>
-            <div class="childDiv">
+            <div class="centerFrame">
                 <img src="data:image/png;base64, {{ heatmap_householdHead2_url }}">
+                    <br>
                     <p>
                         This heatmap is a continuation of the previous heatmap showing the correlation between the household head features for a family having a poor status.
                     </p>
             </div>
         </div>
-
-        <div class="parentDiv">
-            <div class="childDiv">
-                <img src="data:image/png;base64, {{ pi_mainsrc_url }}">
-            </div>
-            <div class="childDiv">
-                <img src="data:image/png;base64, {{ pi_status_url }}">
+        <div>
+            <h2>Type of House (Poor)</h2>
+            <div class="centerFrame">
+                <img src="data:image/png;base64, {{ bar_typ_house_url }}">
             </div>
         </div>
-
+        <hr>
+        <!-- Fourth div -->
+        <h1>Household Possessions</h1>
         <div>
-            <h2>Top 10 Occupations of Heads of Poor Households</h2>
-            <div class="forBarGraph">
-            <img src="data:image/png;base64, {{ bar_poor_url }}">
-            </div>
-            <h2>Highest educational attainment (Poor)</h2>
-            <div class="forBarGraph">
-            <img src="data:image/png;base64, {{ bar_head_attainment_url }}">
-            </div>
-        </div>
-
-        <div>
-            <div class="childDiv">
+            <div class="centerFrame">
                 <img src="data:image/png;base64, {{ heatmap_possessions_url }}">
+                <br>
                 <p>
                     This heatmap shows what possessions have the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
                 </p>
             </div>
         </div>
-
-        <div class="parentDiv">
-            <h2>Correlation Analysis for Poor People</h2>
-            <div>
-                <div class="childDiv">
-                    <img src="data:image/png;base64, {{ heatmap_possessions_url }}">
-                    <p>
-                        This heatmap shows what possessions have the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
-                    </p>
-                </div>
-            </div>
-            <div>
-                <div class="childDiv">
-                    <img src="data:image/png;base64, {{ heatmap_incomeFamilyExpense1_url }}">
-                    <p>
-                        This heatmap shows the income and expenses with the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
-                    </p>
-                </div>
-                <div class="childDiv">
-                    <img src="data:image/png;base64, {{ heatmap_incomeFamilyExpense2_url }}">
-                    <p>
-                        This heatmap is a continuation of the previous heatmap showing the correlation between the income and expense for a family having a poor status.
-                    </p>
-                </div>
-
-            </div>
-            <div>
-                <div class="childDiv">
-                    <img src="data:image/png;base64, {{ heatmap_householdHead1_url }}">
-                    <p>
-                        This heatmap shows the household head features with the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
-                    </p>
-                </div>
-                <div class="childDiv">
-                    <img src="data:image/png;base64, {{ heatmap_householdHead2_url }}">
-                    <p>
-                        This heatmap is a continuation of the previous heatmap showing the correlation between the household head features for a family having a poor status.
-                    </p>
-                </div>
-            </div>
+        <h2>Number of Household Possessions (Poor & Not Poor)</h2>
+        <div class="centerFrame">
+            <img src="data:image/png;base64, {{ household_possessions_url }}">
         </div>
     </div>
 </section>
