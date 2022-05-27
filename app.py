@@ -54,7 +54,22 @@ def main():
              'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
              'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
              'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+
+    d = {"Bread & Cereal Expenses": 'bread_cereals_expense', "Rice Expenses": 'rice_expense',
+         "Meat Expenses": 'meat_expense', "Fish Expenses": 'fish_marine_expense',
+         "Fruit Expenses": 'fruit_expense', "Vegetable Expenses": 'veg_expense',
+         "Resto and Hotel Expenses": "restohotel_expense", "Alcohol Expenses": 'alcohol_expense',
+         "Tobacco Expenses": 'tobacco_expense', "Clothin Expenses": 'wear_expense',
+         "House & Water Expenses": 'houseing_water_expense', "Imputed House Rental Value": 'imp_houserental',
+         "Medical Expenses": 'medcare_expense', "Transportation Expenses": 'transpo_expense',
+         "Communication Expenses": 'commu_expense', "Education Expenses": "edu_expense",
+         "Miscellaneous Expenses": "misc_expense", "Occasion Expenses": "specialoc_expense",
+         "Farming & Garden Expenses": "farming_garden_expense",
+         "Income of Entrepreneurial Acitivites": "totalincome_entrep"}
+
     poor_data_mydict = {}
+
+    temp = dict((v, k) for k, v in d.items())
 
     for x in label:
         poor_data_mydict[x] = poor_data[x].mean()
@@ -62,8 +77,10 @@ def main():
     poor_data_sorted_tuple = sorted(poor_data_mydict.items(), key=lambda x: x[1], reverse=True)
     poor_data_sorted_dict = {k: v for k, v in poor_data_sorted_tuple}
 
-    keys = list(poor_data_sorted_dict.keys())
-    values = list(poor_data_sorted_dict.values())
+    clean_dict = {temp[k]: v for k, v in poor_data_sorted_dict.items()}
+
+    keys = list(clean_dict.keys())
+    values = list(clean_dict.values())
 
     plt.figure(figsize=(20, 10))
     ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
@@ -154,7 +171,22 @@ def plot(rgn):
              'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
              'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
              'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+
+    d = {"Bread & Cereal Expenses": 'bread_cereals_expense', "Rice Expenses": 'rice_expense',
+         "Meat Expenses": 'meat_expense', "Fish Expenses": 'fish_marine_expense',
+         "Fruit Expenses": 'fruit_expense', "Vegetable Expenses": 'veg_expense',
+         "Resto and Hotel Expenses": "restohotel_expense", "Alcohol Expenses": 'alcohol_expense',
+         "Tobacco Expenses": 'tobacco_expense', "Clothin Expenses": 'wear_expense',
+         "House & Water Expenses": 'houseing_water_expense', "Imputed House Rental Value": 'imp_houserental',
+         "Medical Expenses": 'medcare_expense', "Transportation Expenses": 'transpo_expense',
+         "Communication Expenses": 'commu_expense', "Education Expenses": "edu_expense",
+         "Miscellaneous Expenses": "misc_expense", "Occasion Expenses": "specialoc_expense",
+         "Farming & Garden Expenses": "farming_garden_expense",
+         "Income of Entrepreneurial Acitivites": "totalincome_entrep"}
+
     poor_data_mydict = {}
+
+    temp = dict((v, k) for k, v in d.items())
 
     for x in label:
         poor_data_mydict[x] = poor_data[x].mean()
@@ -162,8 +194,10 @@ def plot(rgn):
     poor_data_sorted_tuple = sorted(poor_data_mydict.items(), key=lambda x: x[1], reverse=True)
     poor_data_sorted_dict = {k: v for k, v in poor_data_sorted_tuple}
 
-    keys = list(poor_data_sorted_dict.keys())
-    values = list(poor_data_sorted_dict.values())
+    clean_dict = {temp[k]: v for k, v in poor_data_sorted_dict.items()}
+
+    keys = list(clean_dict.keys())
+    values = list(clean_dict.values())
 
     plt.figure(figsize=(20, 10))
     ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
