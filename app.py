@@ -828,7 +828,6 @@ def plot(rgn):
                'no_employedfam',
                'Female',
                'Male',
-               'Annulled',
                'Divorced/Separated',
                'Married',
                'Single',

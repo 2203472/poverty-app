@@ -20,49 +20,49 @@
 						<div class="row">
 							<br>
 							Total Household Income<br>
-							<input name="houseincome" type="number" required>
+							<input name="houseincome" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Bread & Cereals Expenditure<br>
-							<input name="breadcerealexp" type="number" required>
+							<input name="breadcerealexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Rice Expenditure<br>
-							<input name="riceexp" type="number" required>
+							<input name="riceexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Meat Expenditure<br>
-							<input name="meatexp" type="number" required>
+							<input name="meatexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Fish & Marine Products Expenditure<br>
-							<input name="fishmarineexp" type="number" required>
+							<input name="fishmarineexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Fruit Expenditure<br>
-							<input name="fruitexp" type="number" required>
+							<input name="fruitexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Vegetable Expenditure<br>
-							<input name="veggieexp" type="number" required>
+							<input name="veggieexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Restaurant & Hotel Expenditure<br>
-							<input name="restohotelexp" type="number" style="margin-bottom: 5%;" required>
+							<input name="restohotelexp" onkeypress="isInteger(event)" style="margin-bottom: 5%;" required>
 							<br>
 						</div>
 					  </div>
@@ -70,49 +70,49 @@
 						<div class="row">
 							<br>
 							Clothing and Other Wear Expenditure <br>
-							<input name="wearexp" type="number" required>
+							<input name="wearexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Housing and water Expenditure<br>
-							<input name="housingwaterexp" type="number" required>
+							<input name="housingwaterexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Imputed House Rental Value<br>
-							<input name="imphouserental" type="number" required>
+							<input name="imphouserental" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Transportation Expenditure<br>
-							<input name="transpoexp" type="number" required>
+							<input name="transpoexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Communication Expenditure<br>
-							<input name="commuexp" type="number" required>
+							<input name="commuexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Education Expenditure<br>
-							<input name="eduexp" type="number" required>
+							<input name="eduexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Misc Goods and Services Expenditure<br>
-							<input name="miscexp" type="number" required>
+							<input name="miscexp" onkeypress="isInteger(event)" required>
 							<br>
 						</div>
 						<div class="row">
 							<br>
 							Crop Farming and Gardening expenses<br>
-							<input name="farmgardenexp" type="number" style="margin-bottom: 5%;" required>
+							<input name="farmgardenexp" onkeypress="isInteger(event)" style="margin-bottom: 5%;" required>
 							<br>
 						</div>
 					  </div>
@@ -165,4 +165,14 @@
             <img src="data:image/png;base64, {{ pr_expenditure_rgn }}">
         </div>
 	</div>
+    <script>
+
+        function isInteger(evt) {
+            var char = String.fromCharCode(evt.which);
+
+            if(!(/[0-9]/.test(char))) {
+                evt.preventDefault();
+            }
+        }
+    </script>
 </body>
