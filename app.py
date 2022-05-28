@@ -30,15 +30,17 @@ def main():
     # 2015 Household Expenditure
     img = BytesIO()
     data = pd.read_csv('datasets/fies-cleaned.csv')
+    cg_font = {"fontname": "Century Gothic"}
     sns.set_theme(style="whitegrid")
 
     plt.figure(figsize=(15, 10))
     ax = sns.barplot(x="region", y="total_expenditure", palette="pastel", edgecolor=".6", hue="class", data=data)
-    ax.set_xticklabels(ax.get_xticklabels())
+    ax.set_xticklabels(ax.get_xticklabels(), fontname="Century Gothic")
     plt.xticks(rotation=70)
 
     ax.set_xlabel("Region")
     ax.set_ylabel("Total Expenditure")
+    plt.title('2015 Average Household Expenditure', cg_font, fontsize=20)
 
     plt.tight_layout()
 
@@ -53,7 +55,7 @@ def main():
              'fruit_expense', 'veg_expense', 'restohotel_expense', 'alcohol_expense',
              'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
              'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
-             'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+             'specialoc_expense', 'farming_garden_expense']
 
     d = {"Bread & Cereal Expenses": 'bread_cereals_expense', "Rice Expenses": 'rice_expense',
          "Meat Expenses": 'meat_expense', "Fish Expenses": 'fish_marine_expense',
@@ -64,8 +66,7 @@ def main():
          "Medical Expenses": 'medcare_expense', "Transportation Expenses": 'transpo_expense',
          "Communication Expenses": 'commu_expense', "Education Expenses": "edu_expense",
          "Miscellaneous Expenses": "misc_expense", "Occasion Expenses": "specialoc_expense",
-         "Farming & Garden Expenses": "farming_garden_expense",
-         "Income of Entrepreneurial Acitivites": "totalincome_entrep"}
+         "Farming & Garden Expenses": "farming_garden_expense"}
 
     poor_data_mydict = {}
 
@@ -84,8 +85,9 @@ def main():
 
     plt.figure(figsize=(20, 10))
     ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
-    ax.set_xlabel("Average Expenditures")
-    ax.bar_label(ax.containers[0], padding=3)
+    ax.set_xlabel("Average Expenditures", cg_font)
+    plt.title('Average Poor Household Expenditure', cg_font, fontsize=20)
+    ax.bar_label(ax.containers[0], padding=3, fontname="Century Gothic")
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
@@ -122,9 +124,9 @@ def main():
                 fish_marine_expense) + float(fruit_expense) + float(veg_expense)
 
             df.loc[len(df)] = [household_income, food_expense, bread_cereals_expense, meat_expense, rice_expense,
-                              fruit_expense, fish_marine_expense, veg_expense, restohotel_expense, wear_expense,
-                              housing_water_expense, imp_houserental, transpo_expense, commu_expense, edu_expense, 
-                              misc_expense, farming_garden_expense, 5]
+                               fruit_expense, fish_marine_expense, veg_expense, restohotel_expense, wear_expense,
+                               housing_water_expense, imp_houserental, transpo_expense, commu_expense, edu_expense,
+                               misc_expense, farming_garden_expense, 5]
 
             # Normalization
             x = df.values
@@ -151,6 +153,7 @@ def plot(rgn):
     df = pd.read_csv('datasets/fies-cleaned.csv')
     colors = ['#DF9D9E', '#BF899C', '#C79272', '#987896', '#9E8C54', '#716987',
               '#67864C', '#4C5972', '#117D5B', '#2F4858', '#006F74']
+    cg_font = {"fontname": "Century Gothic"}
     region_value = rgn
     img = BytesIO()
 
@@ -169,7 +172,7 @@ def plot(rgn):
              'fruit_expense', 'veg_expense', 'restohotel_expense', 'alcohol_expense',
              'tobacco_expense', 'wear_expense', 'houseing_water_expense', 'imp_houserental',
              'medcare_expense', 'transpo_expense', 'commu_expense', 'edu_expense', 'misc_expense',
-             'specialoc_expense', 'farming_garden_expense', 'totalincome_entrep']
+             'specialoc_expense', 'farming_garden_expense']
 
     d = {"Bread & Cereal Expenses": 'bread_cereals_expense', "Rice Expenses": 'rice_expense',
          "Meat Expenses": 'meat_expense', "Fish Expenses": 'fish_marine_expense',
@@ -180,8 +183,7 @@ def plot(rgn):
          "Medical Expenses": 'medcare_expense', "Transportation Expenses": 'transpo_expense',
          "Communication Expenses": 'commu_expense', "Education Expenses": "edu_expense",
          "Miscellaneous Expenses": "misc_expense", "Occasion Expenses": "specialoc_expense",
-         "Farming & Garden Expenses": "farming_garden_expense",
-         "Income of Entrepreneurial Acitivites": "totalincome_entrep"}
+         "Farming & Garden Expenses": "farming_garden_expense"}
 
     poor_data_mydict = {}
 
@@ -200,8 +202,9 @@ def plot(rgn):
 
     plt.figure(figsize=(20, 10))
     ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
-    ax.set_xlabel("Average Expenditures")
-    ax.bar_label(ax.containers[0], padding=3)
+    ax.set_xlabel("Average Expenditures", cg_font)
+    plt.title('Average Poor Household Expenditure', cg_font, fontsize=20)
+    ax.bar_label(ax.containers[0], padding=3, fontname="Century Gothic")
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
@@ -215,9 +218,11 @@ def plot(rgn):
     plt.figure(figsize=(15, 7))
     ax1 = sns.barplot(x=poor_occupation_count.index, y=poor_occupation_count.values, palette="pastel",
                       edgecolor=".6", hue=poor_occupation_count.index, dodge=False)
-    plt.ylabel('Occurrence')
+    plt.ylabel('Occurrence', cg_font)
+    plt.title('Top 10 Poor Household Head Occupation', cg_font, fontsize=20)
+
     for container in ax1.containers:
-        ax1.bar_label(container, padding=3)
+        ax1.bar_label(container, padding=3, fontname="Century Gothic")
 
     plt.xticks([])
 
@@ -232,8 +237,10 @@ def plot(rgn):
 
     plt.figure(figsize=(10, 5))
     ax2 = sns.barplot(x=poor_data_counts.values, y=poor_data_counts.index, palette="pastel", edgecolor=".6")
-    ax2.bar_label(ax2.containers[0], padding=3)
-    plt.xlabel("Count")
+    ax2.bar_label(ax2.containers[0], padding=3, fontname="Century Gothic")
+
+    plt.xlabel("Occurence", cg_font)
+    plt.title('Top 10 Poor Household Head Highest Attainment', cg_font, fontsize=20)
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
@@ -246,8 +253,9 @@ def plot(rgn):
     plt.figure(figsize=(10, 5))
     ax3 = sns.barplot(x=poor_data_counts.values, y=poor_data_counts.index, palette="pastel", edgecolor=".6")
     ax3.set(ylabel=None)
-    ax3.set(xlabel="Count")
-    ax3.bar_label(ax3.containers[0], padding=3)
+    plt.xlabel("Occurence", cg_font)
+    plt.title('Poor Household Type Of House', cg_font, fontsize=20)
+    ax3.bar_label(ax3.containers[0], padding=3, fontname="Century Gothic")
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
@@ -417,13 +425,16 @@ def plot(rgn):
     items_bar_plt = items_plt.plot.barh(figsize=(10, 6), width=1, color=['#F4BFBF', '#8CC0DE'])
     items_bar_plt.legend(loc='lower right')
 
+    plt.title('Poor Household Possession', cg_font, fontsize=20)
+
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
     img.seek(0)
     household_possessions_url = base64.b64encode(img.getvalue()).decode('utf8')
 
     # Correlation on Household Possessions
-    appliancesData = df.loc[df['region'].str.contains(region_value)]
+    df = pd.read_csv('datasets/fies-cleaned.csv')
+    df = df.loc[df['region'].str.contains(region_value)]
 
     to_drop = ['household_income', 'region', 'food_expense', 'mainsrc', 'agri_indicator',
                'bread_cereals_expense', 'rice_expense', 'meat_expense', 'fish_marine_expense',
@@ -435,16 +446,16 @@ def plot(rgn):
                'householdtype', 'total_fam_mem', 'memage_less5', 'memage_5-17', 'no_employedfam', 'bldghousetype',
                'rooftype', 'walltype', 'floor_area', 'house_age', 'no_bedrooms', 'tenure', 'toilet_facility',
                'electricity', 'water_supply']
-    appliancesData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    classTypeDummies = pd.get_dummies(appliancesData['class'])
+    classTypeDummies = pd.get_dummies(df['class'])
 
-    appliancesData = pd.concat([appliancesData, classTypeDummies], axis='columns')
+    df = pd.concat([df, classTypeDummies], axis='columns')
 
     to_drop = ['total_expenditure',
                'class',
                'Not Poor']
-    appliancesData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
     d_hp = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
             "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
@@ -456,7 +467,7 @@ def plot(rgn):
             "Number of Motorcycle": 'no_motorcycle', "Poor": 'Poor'}
 
     plt.figure(figsize=(10, 6))
-    sns.heatmap(appliancesData.corr(), annot=True,
+    sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm', xticklabels=d_hp, yticklabels=d_hp)
 
     plt.title('Correlation Between Family Possessions & Poor Status\n',
@@ -470,7 +481,8 @@ def plot(rgn):
 
     # First Half of Income & Family
     # Related Expense Correlation
-    foodExpenseData = df.loc[df['region'].str.contains(region_value)]
+    df = pd.read_csv('datasets/fies-cleaned.csv')
+    df = df.loc[df['region'].str.contains(region_value)]
 
     to_drop = ['region',
                'alcohol_expense',
@@ -521,21 +533,21 @@ def plot(rgn):
                'no_stovegas',
                'no_banca',
                'no_motorcycle']
-    foodExpenseData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    mainsrcTypeDummies = pd.get_dummies(foodExpenseData['mainsrc'])
-    classTypeDummies = pd.get_dummies(foodExpenseData['class'])
+    mainsrcTypeDummies = pd.get_dummies(df['mainsrc'])
+    classTypeDummies = pd.get_dummies(df['class'])
 
-    foodExpenseData = pd.concat([foodExpenseData, mainsrcTypeDummies], axis='columns')
-    foodExpenseData = pd.concat([foodExpenseData, classTypeDummies], axis='columns')
+    df = pd.concat([df, mainsrcTypeDummies], axis='columns')
+    df = pd.concat([df, classTypeDummies], axis='columns')
 
     to_drop = ['class',
                'mainsrc',
                'Not Poor']
-    foodExpenseData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    plt.figure(figsize=(10, 7))
-    sns.heatmap(foodExpenseData.corr(), annot=True,
+    plt.figure(figsize=(12, 9))
+    sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm')
 
     plt.title('Correlation Between (Income & Family Related Expense) & Poor Status\n',
@@ -549,7 +561,8 @@ def plot(rgn):
 
     # Second Half of Income & Family
     # Related Expense Correlation
-    foodExpenseData = df.loc[df['region'].str.contains(region_value)]
+    df = pd.read_csv('datasets/fies-cleaned.csv')
+    df = df.loc[df['region'].str.contains(region_value)]
 
     to_drop = ['household_income',
                'region',
@@ -599,18 +612,18 @@ def plot(rgn):
                'no_stovegas',
                'no_banca',
                'no_motorcycle']
-    foodExpenseData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    classTypeDummies = pd.get_dummies(foodExpenseData['class'])
+    classTypeDummies = pd.get_dummies(df['class'])
 
-    foodExpenseData = pd.concat([foodExpenseData, classTypeDummies], axis='columns')
+    df = pd.concat([df, classTypeDummies], axis='columns')
 
     to_drop = ['class',
                'Not Poor']
-    foodExpenseData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
     plt.figure(figsize=(10, 7))
-    sns.heatmap(foodExpenseData.corr(), annot=True,
+    sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm')
 
     plt.title('Correlation Between (Income & Family Related Expense) & Poor Status\n',
@@ -624,7 +637,8 @@ def plot(rgn):
 
     # First Half of Income & Family
     # Related Expense Correlation
-    houseHoldHeadData = df.loc[df['region'].str.contains(region_value)]
+    df = pd.read_csv('datasets/fies-cleaned.csv')
+    df = df.loc[df['region'].str.contains(region_value)]
 
     to_drop = ['household_income',
                'region',
@@ -675,18 +689,17 @@ def plot(rgn):
                'no_stovegas',
                'no_banca',
                'no_motorcycle']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    headSexDummies = pd.get_dummies(houseHoldHeadData['head_sex'])
-    headMaritalDummies = pd.get_dummies(houseHoldHeadData['head_marital'])
-    headJobBusinessDummies = pd.get_dummies(houseHoldHeadData['head_job_business'])
-    householdtypeDummies = pd.get_dummies(houseHoldHeadData['householdtype'])
-    classTypeDummies = pd.get_dummies(houseHoldHeadData['class'])
+    headSexDummies = pd.get_dummies(df['head_sex'])
+    headMaritalDummies = pd.get_dummies(df['head_marital'])
+    headJobBusinessDummies = pd.get_dummies(df['head_job_business'])
+    classTypeDummies = pd.get_dummies(df['class'])
 
-    houseHoldHeadData = pd.concat([houseHoldHeadData, headSexDummies], axis='columns')
-    houseHoldHeadData = pd.concat([houseHoldHeadData, headMaritalDummies], axis='columns')
-    houseHoldHeadData = pd.concat([houseHoldHeadData, headJobBusinessDummies], axis='columns')
-    houseHoldHeadData = pd.concat([houseHoldHeadData, classTypeDummies], axis='columns')
+    df = pd.concat([df, headSexDummies], axis='columns')
+    df = pd.concat([df, headMaritalDummies], axis='columns')
+    df = pd.concat([df, headJobBusinessDummies], axis='columns')
+    df = pd.concat([df, classTypeDummies], axis='columns')
 
     to_drop = ['head_sex',
                'head_marital',
@@ -694,30 +707,30 @@ def plot(rgn):
                'householdtype',
                'class',
                'Not Poor']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    houseHoldHeadData['head_highestgrade'] = houseHoldHeadData["head_highestgrade"].astype('category')
-    houseHoldHeadData['head_occupation'] = houseHoldHeadData["head_occupation"].astype('category')
-    houseHoldHeadData['head_class_worker'] = houseHoldHeadData["head_class_worker"].astype('category')
+    df['head_highestgrade'] = df["head_highestgrade"].astype('category')
+    df['head_occupation'] = df["head_occupation"].astype('category')
+    df['head_class_worker'] = df["head_class_worker"].astype('category')
 
-    houseHoldHeadData['head_highestgrade_cat'] = houseHoldHeadData["head_highestgrade"].cat.codes
-    houseHoldHeadData['head_occupation_cat'] = houseHoldHeadData["head_occupation"].cat.codes
-    houseHoldHeadData['head_classworker_cat'] = houseHoldHeadData["head_class_worker"].cat.codes
+    df['head_highestgrade_cat'] = df["head_highestgrade"].cat.codes
+    df['head_occupation_cat'] = df["head_occupation"].cat.codes
+    df['head_classworker_cat'] = df["head_class_worker"].cat.codes
 
     to_drop = ['head_highestgrade',
                'head_occupation',
                'head_class_worker']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
     to_drop = ['No Job/Business',
                'With Job/Business',
                'head_highestgrade_cat',
                'head_occupation_cat',
                'head_classworker_cat']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
     plt.figure(figsize=(10, 7))
-    sns.heatmap(houseHoldHeadData.corr(), annot=True,
+    sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm')
 
     plt.title('Correlation Between Household Head & Poor Status\n',
@@ -731,7 +744,8 @@ def plot(rgn):
 
     # Second Half of Income & Family
     # Related Expense Correlation
-    houseHoldHeadData = df.loc[df['region'].str.contains(region_value)]
+    df = pd.read_csv('datasets/fies-cleaned.csv')
+    df = df.loc[df['region'].str.contains(region_value)]
 
     to_drop = ['household_income',
                'region',
@@ -782,18 +796,19 @@ def plot(rgn):
                'no_stovegas',
                'no_banca',
                'no_motorcycle']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    headSexDummies = pd.get_dummies(houseHoldHeadData['head_sex'])
-    headMaritalDummies = pd.get_dummies(houseHoldHeadData['head_marital'])
-    headJobBusinessDummies = pd.get_dummies(houseHoldHeadData['head_job_business'])
-    pd.get_dummies(houseHoldHeadData['householdtype'])
-    classTypeDummies = pd.get_dummies(houseHoldHeadData['class'])
+    headSexDummies = pd.get_dummies(df['head_sex'])
+    headMaritalDummies = pd.get_dummies(df['head_marital'])
+    headJobBusinessDummies = pd.get_dummies(df['head_job_business'])
+    householdtypeDummies = pd.get_dummies(df['householdtype'])
+    classTypeDummies = pd.get_dummies(df['class'])
 
-    houseHoldHeadData = pd.concat([houseHoldHeadData, headSexDummies], axis='columns')
-    houseHoldHeadData = pd.concat([houseHoldHeadData, headMaritalDummies], axis='columns')
-    houseHoldHeadData = pd.concat([houseHoldHeadData, headJobBusinessDummies], axis='columns')
-    houseHoldHeadData = pd.concat([houseHoldHeadData, classTypeDummies], axis='columns')
+    df = pd.concat([df, headSexDummies], axis='columns')
+    df = pd.concat([df, headMaritalDummies], axis='columns')
+    df = pd.concat([df, headJobBusinessDummies], axis='columns')
+    df = pd.concat([df, householdtypeDummies], axis='columns')
+    df = pd.concat([df, classTypeDummies], axis='columns')
 
     to_drop = ['head_sex',
                'head_marital',
@@ -801,20 +816,20 @@ def plot(rgn):
                'householdtype',
                'class',
                'Not Poor']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
-    houseHoldHeadData['head_highestgrade'] = houseHoldHeadData["head_highestgrade"].astype('category')
-    houseHoldHeadData['head_occupation'] = houseHoldHeadData["head_occupation"].astype('category')
-    houseHoldHeadData['head_class_worker'] = houseHoldHeadData["head_class_worker"].astype('category')
+    df['head_highestgrade'] = df["head_highestgrade"].astype('category')
+    df['head_occupation'] = df["head_occupation"].astype('category')
+    df['head_class_worker'] = df["head_class_worker"].astype('category')
 
-    houseHoldHeadData['head_highestgrade_cat'] = houseHoldHeadData["head_highestgrade"].cat.codes
-    houseHoldHeadData['head_occupation_cat'] = houseHoldHeadData["head_occupation"].cat.codes
-    houseHoldHeadData['head_classworker_cat'] = houseHoldHeadData["head_class_worker"].cat.codes
+    df['head_highestgrade_cat'] = df["head_highestgrade"].cat.codes
+    df['head_occupation_cat'] = df["head_occupation"].cat.codes
+    df['head_classworker_cat'] = df["head_class_worker"].cat.codes
 
     to_drop = ['head_highestgrade',
                'head_occupation',
                'head_class_worker']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
     to_drop = ['head_age',
                'total_fam_mem',
@@ -828,10 +843,10 @@ def plot(rgn):
                'Married',
                'Single',
                'Widowed']
-    houseHoldHeadData.drop(to_drop, inplace=True, axis=1)
+    df.drop(to_drop, inplace=True, axis=1)
 
     plt.figure(figsize=(10, 7))
-    sns.heatmap(houseHoldHeadData.corr(), annot=True,
+    sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm')
 
     plt.title('Correlation Between Household Head & Poor Status\n',
