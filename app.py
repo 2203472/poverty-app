@@ -141,7 +141,8 @@ def main():
             else:
                 printpredict = "Not Poor"
 
-            return flask.render_template('main.html', result=printpredict)
+            return flask.render_template('main.html', result=printpredict, expenditure_rgn=expenditure_rgn,
+                                         pr_expenditure_rgn=pr_expenditure_rgn)
 
         if request.form['btn'] == 'Plot':
             region = request.form["region"]
@@ -389,12 +390,12 @@ def plot(rgn):
              'no_banca', 'no_motorcycle']
 
     d = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
-            "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
-            "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
-            "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
-            "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
-            "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
-            "Number of Motorcycle": 'no_motorcycle'}
+         "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
+         "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
+         "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
+         "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
+         "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
+         "Number of Motorcycle": 'no_motorcycle'}
 
     d = dict((v, k) for k, v in d.items())
 
