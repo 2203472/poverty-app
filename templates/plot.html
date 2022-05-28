@@ -40,8 +40,11 @@
                         </p>
                 </div>
                 <h2>Average per Expenditure</h2>
-                <div class="centerFrame">
+                <div class="centerFrameMax">
                     <img src="data:image/png;base64, {{ pr_expenditure_rgn }}">
+                </div>
+                <div class="centerFramePie">
+                    <img src="data:image/png;base64, {{ pi_tenure_url }}">
                 </div>
             </div>
         </div>
@@ -73,11 +76,11 @@
             </div>
             <div>
                 <h2>Top 10 Occupations of Heads of Poor Households</h2>
-                <div class="centerFrame">
+                <div class="centerFrameMax">
                     <img src="data:image/png;base64, {{ bar_poor_url }}">
                 </div>
                 <h2>Highest educational attainment (Poor)</h2>
-                <div class="centerFrame">
+                <div class="centerFrameMax">
                     <img src="data:image/png;base64, {{ bar_head_attainment_url }}">
                 </div>
             </div>
@@ -86,9 +89,8 @@
         <!-- Third div -->
         <h1>House Details</h1>
         <div>
-            <div class="centerFrame">
+            <div class="centerFrameHeatMap">
                 <img src="data:image/png;base64, {{ heatmap_householdHead2_url }}">
-                    <br>
                     <p>
                         This heatmap is a continuation of the previous heatmap showing the correlation between the household head features for a family having a poor status.
                     </p>
@@ -96,7 +98,7 @@
         </div>
         <div>
             <h2>Type of House (Poor)</h2>
-            <div class="centerFrame">
+            <div class="centerFrameMax">
                 <img src="data:image/png;base64, {{ bar_typ_house_url }}">
             </div>
         </div>
@@ -104,29 +106,24 @@
         <!-- Fourth div -->
         <h1>Household Possessions</h1>
         <div>
-            <div class="centerFrame">
+            <div class="centerFrameHeatMap">
                 <img src="data:image/png;base64, {{ heatmap_possessions_url }}">
-                <br>
                 <p>
                     This heatmap shows what possessions have the highest correlation for a family having a poor status by focusing on the column/row of the poor section.
                 </p>
             </div>
         </div>
         <h2>Number of Household Possessions (Poor & Not Poor)</h2>
-        <div class="centerFrame">
+        <div class="centerFrameMax">
             <img src="data:image/png;base64, {{ household_possessions_url }}">
         </div>
-    </div>
-
-    <div class="parentDiv">
-        <div class="childDiv">
-            <img src="data:image/png;base64, {{ pi_toilet_fac_url }}">
-        </div>
-        <div class="childDiv">
-            <img src="data:image/png;base64, {{ pi_tenure_url }}">
-        </div>
-        <div class="childDiv">
-            <img src="data:image/png;base64, {{ pi_wtr_sply_url }}">
+        <div class="parentDiv">
+            <div class="centerFramePie">
+                <img src="data:image/png;base64, {{ pi_toilet_fac_url }}">
+            </div>
+            <div class="centerFramePie">
+                <img src="data:image/png;base64, {{ pi_wtr_sply_url }}">
+            </div>
         </div>
     </div>
 </section>

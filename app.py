@@ -308,7 +308,7 @@ def plot(rgn):
     for key in toilet_fac_count.keys():
         toilet_fac_status.append(toilet_fac_count[key])
 
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(6, 5))
 
     plt.pie(toilet_fac_status, labels=toilet_fac_list,
             shadow=True, startangle=180, colors=colors,
@@ -333,7 +333,7 @@ def plot(rgn):
     for key in tenure_count.keys():
         tenure_status.append(tenure_count[key])
 
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(7, 7))
 
     plt.pie(tenure_status, labels=tenure_list,
             shadow=True, startangle=180, colors=colors,
@@ -358,7 +358,7 @@ def plot(rgn):
     for key in wtr_sply_count.keys():
         wtr_sply_status.append(wtr_sply_count[key])
 
-    plt.figure(figsize=(10, 10))
+    plt.figure(figsize=(8, 8))
 
     plt.pie(wtr_sply_status, labels=wtr_sply_list,
             shadow=True, startangle=180, colors=colors,

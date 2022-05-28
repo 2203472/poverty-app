@@ -62,9 +62,37 @@ option {
     margin-right: 40%;
 }
 
-.centerFrame {
+.centerFrameMax {
     background-color:white;
     width: 85%;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    margin: 25px auto 25px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow:hidden;
+    transform: translate3d(0,0,0);
+}
+
+.centerFrameHeatMap {
+    background-color:white;
+    width: 60%;
+    border-radius: 25px;
+    padding: 10px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+    margin: 25px auto 25px auto;
+    display: block;
+    text-align: center;
+    align-items: center;
+    overflow:hidden;
+    transform: translate3d(0,0,0);
+}
+
+.centerFramePie {
+    background-color:white;
+    width: 65%;
     border-radius: 25px;
     padding: 10px;
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
