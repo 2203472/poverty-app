@@ -40,7 +40,7 @@ def main():
 
     ax.set_xlabel("Region")
     ax.set_ylabel("Total Expenditure")
-    plt.title('2015 Average Household Expenditure', cg_font, fontsize=20)
+    plt.title('2015 Average Household Expenditure by Region', cg_font, fontsize=20)
 
     plt.tight_layout()
 
@@ -86,7 +86,7 @@ def main():
     plt.figure(figsize=(20, 10))
     ax = sns.barplot(x=values, y=keys, palette="pastel", edgecolor=".6")
     ax.set_xlabel("Average Expenditures", cg_font)
-    plt.title('Average Poor Household Expenditure', cg_font, fontsize=20)
+    plt.title('Average Expenses of Poor Households within the Country', cg_font, fontsize=20)
     ax.bar_label(ax.containers[0], padding=3, fontname="Century Gothic")
 
     plt.savefig(img, format='png', bbox_inches='tight')
@@ -219,7 +219,7 @@ def plot(rgn):
     ax1 = sns.barplot(x=poor_occupation_count.index, y=poor_occupation_count.values, palette="pastel",
                       edgecolor=".6", hue=poor_occupation_count.index, dodge=False)
     plt.ylabel('Occurrence', cg_font)
-    plt.title('Top 10 Poor Household Head Occupation', cg_font, fontsize=20)
+    plt.title('Top 10 Occupations of Heads of Poor Households', cg_font, fontsize=20)
 
     for container in ax1.containers:
         ax1.bar_label(container, padding=3, fontname="Century Gothic")
@@ -240,7 +240,7 @@ def plot(rgn):
     ax2.bar_label(ax2.containers[0], padding=3, fontname="Century Gothic")
 
     plt.xlabel("Occurence", cg_font)
-    plt.title('Top 10 Poor Household Head Highest Attainment', cg_font, fontsize=20)
+    plt.title('Top 10 Educational Attainment of Heads of Poor Households', cg_font, fontsize=20)
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
@@ -254,7 +254,7 @@ def plot(rgn):
     ax3 = sns.barplot(x=poor_data_counts.values, y=poor_data_counts.index, palette="pastel", edgecolor=".6")
     ax3.set(ylabel=None)
     plt.xlabel("Occurence", cg_font)
-    plt.title('Poor Household Roof Type', cg_font, fontsize=20)
+    plt.title('Roof Types of Poor Households', cg_font, fontsize=20)
     ax3.bar_label(ax3.containers[0], padding=3, fontname="Century Gothic")
 
     plt.savefig(img, format='png', bbox_inches='tight')
@@ -274,7 +274,7 @@ def plot(rgn):
             shadow=True, startangle=180,
             autopct='%1.1f%%', colors=colors)
 
-    plt.title('Main Source of Income',
+    plt.title('Main Source of Income of Poor Households',
               fontname="Century Gothic",
               size=18)
 
@@ -297,7 +297,7 @@ def plot(rgn):
             autopct='%1.1f%%',
             colors=colors)
 
-    plt.title('Household Financial Status',
+    plt.title('Poverty Status within the Region',
               fontname="Century Gothic",
               size=18)
 
@@ -322,7 +322,7 @@ def plot(rgn):
             shadow=True, startangle=180, colors=colors,
             autopct='%1.1f%%')
 
-    plt.title('Poor Toilet Facility',
+    plt.title('Toilet Facilities of Poor Households',
               fontname="Century Gothic",
               size=18)
 
@@ -347,7 +347,7 @@ def plot(rgn):
             shadow=True, startangle=180, colors=colors,
             autopct='%1.1f%%')
 
-    plt.title('Poor Tenure',
+    plt.title('Tenure Status of Poor Households',
               fontname="Century Gothic",
               size=18)
 
@@ -372,7 +372,7 @@ def plot(rgn):
             shadow=True, startangle=180, colors=colors,
             autopct='%1.1f%%')
 
-    plt.title('Poor Water supply',
+    plt.title('Water Supply of Poor Households',
               fontname="Century Gothic",
               size=18)
 
@@ -383,49 +383,39 @@ def plot(rgn):
 
     # Household Possessions
     poor_data = df.loc[(df['class'] == 'Poor') & (df['region'] == region_value)]
-    not_poor_data = df.loc[(df['class'] == 'Not Poor') & (df['region'] == region_value)]
 
     label = ['no_television', 'no_cd_vcd_dvd', 'no_component_stereo', 'no_ref', 'no_washingmachine',
              'no_airconditioner', 'no_car_jeep_van', 'no_landline_wireless', 'no_cp', 'no_pc', 'no_stovegas',
              'no_banca', 'no_motorcycle']
 
     d = {"Number of Television": 'no_television', "Number of VCD/DVD": 'no_cd_vcd_dvd',
-         "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
-         "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
-         "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
-         "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
-         "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
-         "Number of Motorcycle": 'no_motorcycle'}
+            "Number of Component Stereo": 'no_component_stereo', "Number of Refrigerator": 'no_ref',
+            "Number of Washing Machine": 'no_washingmachine', "Number of Air Conditioner": 'no_airconditioner',
+            "Number of Car/Jeep/Van": 'no_car_jeep_van', "Number of Landline/Wireless Connection": 'no_landline_wireless',
+            "Number of Phone": 'no_cp', "Number of Computer": 'no_pc',
+            "Number of Gas Stove": 'no_stovegas', "Number of Bangka": 'no_banca',
+            "Number of Motorcycle": 'no_motorcycle'}
 
     d = dict((v, k) for k, v in d.items())
 
     mydict_poor = {}
 
     for x in label:
-        mydict_poor[x] = poor_data[x].sum()
+        mydict_poor[x] = poor_data[x].mean()
 
     sorted_tuple_poor = sorted(mydict_poor.items(), key=lambda x: x[1])
     sorted_dict_poor = {k: v for k, v in sorted_tuple_poor}
 
-    mydict_not_poor = {}
-
-    for x in label:
-        mydict_not_poor[x] = not_poor_data[x].sum()
-
-    sorted_tuple_not_poor = sorted(mydict_not_poor.items(), key=lambda x: x[1])
-    sorted_dict_not_poor = {k: v for k, v in sorted_tuple_not_poor}
-
     keys = list(sorted_dict_poor.keys())
     values_poor = list(sorted_dict_poor.values())
-    values_not_poor = list(sorted_dict_not_poor.values())
 
-    items_plt = pd.DataFrame({'Poor': values_poor, 'Not Poor': values_not_poor}, index=keys)
+    items_plt = pd.DataFrame({'Poor': values_poor}, index=keys)
     items_plt = items_plt.rename(index=d)
 
     items_bar_plt = items_plt.plot.barh(figsize=(10, 6), width=1, color=['#F4BFBF', '#8CC0DE'])
     items_bar_plt.legend(loc='lower right')
 
-    plt.title('Poor Household Possession', cg_font, fontsize=20)
+    plt.title('Average No. of Possessions of Poor Households', cg_font, fontsize=20)
 
     plt.savefig(img, format='png', bbox_inches='tight')
     plt.close()
@@ -550,7 +540,7 @@ def plot(rgn):
     sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm')
 
-    plt.title('Correlation Between (Income & Family Related Expense) & Poor Status\n',
+    plt.title('Correlation Between (Household Income and Expenses) & Poor Status\n',
               fontname="Century Gothic",
               size=18)
 
@@ -733,7 +723,7 @@ def plot(rgn):
     sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm')
 
-    plt.title('Correlation Between Household Head & Poor Status\n',
+    plt.title('Correlation Between (Household Head & Members) & Poverty Status\n',
               fontname="Century Gothic",
               size=18)
 
@@ -849,7 +839,7 @@ def plot(rgn):
     sns.heatmap(df.corr(), annot=True,
                 cmap='coolwarm')
 
-    plt.title('Correlation Between Household Head & Poor Status\n',
+    plt.title('Correlation Between (Household Head & Members) & Poverty Status\n',
               fontname="Century Gothic",
               size=18)
 
