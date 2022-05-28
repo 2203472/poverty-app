@@ -254,7 +254,7 @@ def plot(rgn):
     ax3 = sns.barplot(x=poor_data_counts.values, y=poor_data_counts.index, palette="pastel", edgecolor=".6")
     ax3.set(ylabel=None)
     plt.xlabel("Occurence", cg_font)
-    plt.title('Poor Household Type Of House', cg_font, fontsize=20)
+    plt.title('Poor Household Roof Type', cg_font, fontsize=20)
     ax3.bar_label(ax3.containers[0], padding=3, fontname="Century Gothic")
 
     plt.savefig(img, format='png', bbox_inches='tight')
